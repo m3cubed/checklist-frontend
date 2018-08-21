@@ -43,6 +43,7 @@
 		"test": "react-scripts test --env=jsdom",
 		"eject": "react-scripts eject",
 		"postinstall": "react-scripts build",
+		"heroku-postinstall": "react-scripts build",
 		"server": "cross-env NODE_ENV='production' && nodemon server.js"
 	},
 	"devDependencies": {
