@@ -1,0 +1,49 @@
+{
+	"env": {
+		"browser": true,
+		"es6": true
+	},
+	"extends": [
+		"prettier",
+		"prettier/react",
+		"plugin:react/all"
+	],
+	"parserOptions": {
+		"ecmaFeatures": {
+			"jsx": true
+		},
+		"ecmaVersion": 2018,
+		"sourceType": "module"
+	},
+	"plugins": [
+		"react",
+		"jsx-a11y"
+	],
+	"parser": "babel-eslint",
+	"globals": {
+		"module": false
+	},
+	"rules": {
+		"indent": [
+			"error",
+			"tab"
+		],
+		"quotes": [
+			"error",
+			"double"
+		],
+		"semi": [
+			"error",
+			"always"
+		],
+		"no-mixed-spaces-and-tabs": [
+			"error",
+			"smart-tabs"
+		],
+		"react/jsx-indent": [
+			2,
+			"tabs"
+		],
+		"react/jsx-first-prop-new-line": "multiline"
+	}
+}

@@ -1,0 +1,104 @@
+import { CONNECTION } from "../../config/config";
+import { nameDuplicate } from "../../api";
+
+export const LOAD_STUDENT_HW_STATUS = "LOAD_STUDENT_HW_STATUS";
+export const ADD_STUDENT_HW_STATUS = "ADD_STUDENT_HW_STATUS";
+export const DELETE_STUDENT_HW_STATUS = "DELETE_STUDENT_HW_STATUS";
+export const UPDATE_STUDENT_HW_STATUS = "UPDATE_STUDENT_HW_STATUS";
+export const UPDATE_COLUMN_HW_STATUS = "UPDATE_COLUMN_HW_STATUS";
+
+export function loadStudentStatus(studentHWStatus) {
+	return {
+		type: LOAD_STUDENT_HW_STATUS,
+		studentHWStatus
+	};
+}
+
+function addStudentStatus(studentHWStatus) {
+	return {
+		type: ADD_STUDENT_HW_STATUS,
+		studentHWStatus
+	};
+}
+
+export function deleteStudentStatus(studentHWStatus) {
+	return {
+		type: DELETE_STUDENT_HW_STATUS,
+		studentHWStatus
+	};
+}
+
+export function updateStudentStatus(homework, student, status) {
+	return {
+		type: UPDATE_STUDENT_HW_STATUS,
+		homework,
+		student,
+		status
+	};
+}
+
+function updateColumnStatus(column) {
+	return {
+		type: UPDATE_COLUMN_HW_STATUS,
+		column
+	};
+}
+
+export function updateAll(homework) {}
+
+export function handleAddStudentStatus(studentHWStatus) {
+	return dispatch => {
+		fetch(`${CONNECTION}/student_homework_status/new`, {
+			method: "POST",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({ studentHWStatus })
+		})
+			.then(res => res.json())
+			.then(json => {
+				if (json.completed === true) {
+					dispatch(addStudentStatus(json.studentHWStatus));
+				}
+			});
+	};
+}
+
+export function loadDefaultStudentStatus(courseID, resolve, reject) {
+	return dispatch => {
+		fetch(`${CONNECTION}/student_homework_status/retrieve`, {
+			method: "PUT",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({ courseID })
+		})
+			.then(res => res.json())
+			.then(json => {
+				if (json.completed === true) {
+					dispatch(loadStudentStatus(json.studentHWStatus));
+					resolve();
+				} else {
+					reject();
+				}
+			});
+	};
+}
+
+export function handleUpdateColumn(homeworkTitle, statusTitle) {
+	return (dispatch, getState) => {
+		const { hwStudents } = getState();
+
+		const column = {
+			id: homeworkTitle,
+			values: {}
+		};
+		Object.keys(hwStudents).forEach(cv => {
+			column.values[cv] = statusTitle;
+		});
+
+		dispatch(updateColumnStatus(column));
+	};
+}
