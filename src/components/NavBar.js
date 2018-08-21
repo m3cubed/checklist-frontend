@@ -67,6 +67,7 @@ class NavBar extends Component {
 		};
 		this.toggleDrawer = this.toggleDrawer.bind(this);
 		this.authTarget = this.authTarget.bind(this);
+		this.handleLogout = this.handleLogout.bind(this);
 	}
 
 	componentDidMount() {
@@ -103,8 +104,12 @@ class NavBar extends Component {
 		}
 	};
 
+	handleLogout = (cb, dispatch) => () => {
+		this.props.auth.logout(cb, dispatch);
+	};
+
 	render() {
-		const { classes, auth, authUser, users, navbar } = this.props;
+		const { classes, auth, authUser, users, navbar, dispatch } = this.props;
 
 		return (
 			<Fragment>
@@ -127,7 +132,7 @@ class NavBar extends Component {
 
 						{auth.loggedIn ? (
 							<Fragment>
-								{authUser.status === "Admin" ? (
+								{authUser.status === "admin" ? (
 									<Fragment>
 										<Select
 											value={this.state.authUserID}
@@ -157,9 +162,19 @@ class NavBar extends Component {
 										</NavLink>
 									</Fragment>
 								) : null}
-								{authUser.status === "teacher" ? (
+								{authUser.status === "teacher" ||
+								authUser.status === "admin" ? (
 									<Fragment>
-										<Button onClick={auth.logout}>Logout</Button>
+										<Button
+											color="secondary"
+											variant="contained"
+											onClick={this.handleLogout(
+												() => this.props.history.push("/"),
+												dispatch
+											)}
+										>
+											Logout
+										</Button>
 										<NavLink to="/homework_check/home">
 											<Button>HW Check</Button>
 										</NavLink>

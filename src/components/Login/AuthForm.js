@@ -56,8 +56,8 @@ class AuthForm extends Component {
 					hash(email),
 					dispatch,
 					cb,
-					familyName,
 					givenName,
+					familyName,
 					email === process.env.REACT_APP_ADMIN ? "admin" : "teacher"
 				);
 				break;
@@ -97,7 +97,6 @@ class AuthForm extends Component {
 						onSuccess={this.responseGoogle("register", () =>
 							this.props.history.push("/")
 						)}
-						uxMode="redirect"
 						onFailure={this.responseGoogle()}
 					/>
 				</Grid>
@@ -107,7 +106,6 @@ class AuthForm extends Component {
 						onSuccess={this.responseGoogle("login", () =>
 							this.props.history.push("/")
 						)}
-						uxMode="redirect"
 						onFailure={this.responseGoogle()}
 					/>
 				</Grid>

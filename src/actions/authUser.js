@@ -12,11 +12,18 @@ export const ADD_USER_COURSE = "ADD_USER_COURSE";
 export const DELETE_USER_COURSE = "DELETE_USER_COURSE";
 export const REQUEST_COURSE_ENTRY = "REQUEST_COURSE_ENTRY";
 export const ADD_POLLS_RESPONSE = "ADD_POLLS_RESPONSE";
+export const LOGOUT_USER = "LOGOUT_USER";
 
 export function authUser(id) {
 	return {
 		type: AUTH_USER,
 		id
+	};
+}
+
+export function logoutUser() {
+	return {
+		type: LOGOUT_USER
 	};
 }
 
@@ -74,8 +81,40 @@ export function addPollsResponse(pollID, responseID) {
 export function handleChangeUser(user, resolve, reject) {
 	return (dispatch, getState) => {
 		const { authUser } = getState();
+		if (user === null) {
+			resolve();
+			dispatch();
+		}
 		switch (user.status) {
 			case "teacher": {
+				fetch(`${CONNECTION}/user/teacher_info`, {
+					method: "POST",
+					credentials: "include",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({ id: user.id })
+				})
+					.then(res => res.json())
+					.then(json => {
+						if (json.type === "error") {
+							reject();
+							return null;
+						} else {
+							if (authUser !== false) {
+								dispatch(updateUser(authUser));
+							}
+							dispatch(loginUser(user));
+							dispatch(loadDefaultTemplates(json.templates));
+							dispatch(loadDefaultCourses(json.courses));
+							dispatch(loadDefaultPolls(json.polls));
+							resolve();
+						}
+					});
+				break;
+			}
+
+			case "admin": {
 				fetch(`${CONNECTION}/user/teacher_info`, {
 					method: "POST",
 					credentials: "include",

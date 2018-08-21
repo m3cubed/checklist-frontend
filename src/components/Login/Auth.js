@@ -1,5 +1,5 @@
 import { CONNECTION } from "../../config/config";
-import { handleChangeUser } from "../../actions/authUser";
+import { handleChangeUser, logoutUser } from "../../actions/authUser";
 
 class Auth {
 	loggedIn = false;
@@ -61,13 +61,16 @@ class Auth {
 		);
 	};
 
-	logout = () => {
+	logout = (cb, dispatch) => {
 		fetch(`${CONNECTION}/user/logout`, {
 			credentials: "include"
 		})
 			.then(response => response.json())
 			.then(() => {
 				this.loggedIn = false;
+
+				dispatch(logoutUser());
+				cb();
 			});
 	};
 

@@ -6,7 +6,8 @@ import {
 	ADD_USER_COURSE,
 	DELETE_USER_COURSE,
 	REQUEST_COURSE_ENTRY,
-	ADD_POLLS_RESPONSE
+	ADD_POLLS_RESPONSE,
+	LOGOUT_USER
 } from "../actions/authUser";
 import update from "immutability-helper";
 
@@ -14,6 +15,11 @@ export default function authUser(state = false, action) {
 	switch (action.type) {
 		case AUTH_USER:
 			return action.id;
+
+		case LOGOUT_USER: {
+			return false;
+		}
+
 		case LOGIN_USER:
 			return {
 				...action.user
