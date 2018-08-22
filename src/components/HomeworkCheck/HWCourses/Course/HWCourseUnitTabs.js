@@ -20,19 +20,19 @@ const styles = theme => ({
 	root: {
 		flexGrow: 1,
 		height: 700,
-		marginTop: 30
+		marginTop: 30,
 	},
 	unitBar: {
-		position: "static"
+		position: "static",
 	},
 	gridContainer: {
 		height: 650,
 		backgroundColor: theme.palette.primary,
-		display: "block"
+		display: "block",
 	},
 	tabBtn: {
-		button: {}
-	}
+		button: {},
+	},
 });
 
 const searchStudents = props => {
@@ -47,7 +47,7 @@ class HWCourseUnitTabs extends Component {
 	static getDerivedStateFromProps(nextProps, state) {
 		if (!state.value && nextProps) {
 			return {
-				value: Object.keys(nextProps.hwUnits)[0]
+				value: Object.keys(nextProps.hwUnits)[0],
 			};
 		}
 		return null;
@@ -147,11 +147,11 @@ function mapStateToProps({ hwUnits, homeworks, hwStudents, studentHWStatus }) {
 		hwUnits,
 		homeworks,
 		hwStudents,
-		studentHWStatus
+		studentHWStatus,
 	};
 }
 
 export default compose(
 	withStyles(styles),
-	connect(mapStateToProps)
+	connect(mapStateToProps),
 )(HWCourseUnitTabs);

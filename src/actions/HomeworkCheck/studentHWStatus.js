@@ -10,21 +10,21 @@ export const UPDATE_COLUMN_HW_STATUS = "UPDATE_COLUMN_HW_STATUS";
 export function loadStudentStatus(studentHWStatus) {
 	return {
 		type: LOAD_STUDENT_HW_STATUS,
-		studentHWStatus
+		studentHWStatus,
 	};
 }
 
 function addStudentStatus(studentHWStatus) {
 	return {
 		type: ADD_STUDENT_HW_STATUS,
-		studentHWStatus
+		studentHWStatus,
 	};
 }
 
 export function deleteStudentStatus(studentHWStatus) {
 	return {
 		type: DELETE_STUDENT_HW_STATUS,
-		studentHWStatus
+		studentHWStatus,
 	};
 }
 
@@ -33,14 +33,14 @@ export function updateStudentStatus(homework, student, status) {
 		type: UPDATE_STUDENT_HW_STATUS,
 		homework,
 		student,
-		status
+		status,
 	};
 }
 
 function updateColumnStatus(column) {
 	return {
 		type: UPDATE_COLUMN_HW_STATUS,
-		column
+		column,
 	};
 }
 
@@ -52,9 +52,9 @@ export function handleAddStudentStatus(studentHWStatus) {
 			method: "POST",
 			credentials: "include",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ studentHWStatus })
+			body: JSON.stringify({ studentHWStatus }),
 		})
 			.then(res => res.json())
 			.then(json => {
@@ -72,14 +72,17 @@ export function loadDefaultStudentStatus(courseID, resolve, reject) {
 			method: "PUT",
 			credentials: "include",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ courseID })
+			body: JSON.stringify({ courseID }),
 		})
 			.then(res => res.json())
 			.then(json => {
 				if (json.completed === true) {
-					if (json.studentHWStatus !== studentHWStatus) {
+					if (
+						studentHWStatus !== null &&
+						json.studentHWStatus !== studentHWStatus
+					) {
 						dispatch(saveAllStatus(courseID));
 					} else {
 						dispatch(loadStudentStatus(json.studentHWStatus));
@@ -98,7 +101,7 @@ export function handleUpdateColumn(hwID, statusTitle) {
 
 		const column = {
 			id: hwID,
-			values: {}
+			values: {},
 		};
 		Object.keys(hwStudents).forEach(cv => {
 			column.values[cv] = statusTitle;
@@ -117,9 +120,9 @@ export function saveAllStatus(courseID) {
 			method: "PUT",
 			credentials: "include",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ statusList, courseID })
+			body: JSON.stringify({ statusList, courseID }),
 		})
 			.then(res => res.json())
 			.then(json => console.log(json));
