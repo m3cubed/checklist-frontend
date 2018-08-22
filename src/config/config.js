@@ -1,6 +1,9 @@
 let domain, protocol;
 
-if (process.env.NODE_ENV === "production") {
+if (
+	process.env.NODE_ENV === "production" ||
+	process.env.REACT_APP_NODE_ENV === "production"
+) {
 	domain = "folio-productions-fa-backend.herokuapp.com";
 	protocol = "https";
 } else {

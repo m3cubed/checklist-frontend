@@ -19,9 +19,16 @@ export function addHWCourse(course) {
 	};
 }
 
-export function removeCourse(course) {
+function removeHWCourse(id) {
 	return {
 		type: REMOVE_HW_COURSE,
+		id
+	};
+}
+
+function updateHWCourse(course) {
+	return {
+		type: UPDATE_HW_COURSE,
 		course
 	};
 }
@@ -42,9 +49,36 @@ export function loadDefaultHWCourses(resolve, reject) {
 			.then(json => {
 				if (json.completed === true) {
 					dispatch(loadHWCourses(json.courses));
-					resolve();
+					try {
+						resolve();
+					} catch (err) {
+						console.log(err);
+					}
 				} else {
-					reject();
+					try {
+						reject();
+					} catch (err) {
+						console.log(err);
+					}
+				}
+			});
+	};
+}
+
+export function handleDeleteHWCourse(id) {
+	return dispatch => {
+		fetch(`${CONNECTION}/homework_check_courses/delete`, {
+			method: "PUT",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({ id })
+		})
+			.then(res => res.json())
+			.then(json => {
+				if (json.completed === true) {
+					dispatch(removeHWCourse(id));
 				}
 			});
 	};
@@ -67,6 +101,27 @@ export function handleAddHWCourse(course) {
 			.then(json => {
 				if (json.completed === true) {
 					dispatch(addHWCourse(json.course));
+				}
+			});
+	};
+}
+
+export function handleUpdateHWCourse(course) {
+	return dispatch => {
+		fetch(`${CONNECTION}/homework_check_courses/update`, {
+			method: "PUT",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({ course })
+		})
+			.then(res => res.json())
+			.then(json => {
+				if (json.completed === true) {
+					dispatch(updateHWCourse(json.course));
+				} else {
+					console.log(json.err);
 				}
 			});
 	};

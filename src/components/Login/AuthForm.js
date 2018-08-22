@@ -89,6 +89,7 @@ class AuthForm extends Component {
 				justify="center"
 				alignItems="center"
 				style={{ height: 600 }}
+				direction="column"
 			>
 				<Grid item xs={2} align="center">
 					<GoogleLogin

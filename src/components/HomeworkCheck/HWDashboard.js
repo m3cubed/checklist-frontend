@@ -92,19 +92,13 @@ function mapDispatchToProps(dispatch) {
 	dispatch(
 		changeNavbarTitle({ value: "Homework Check", location: "HWCheck Main" })
 	);
+	dispatch(loadDefaultHWCourses());
 	return { dispatch };
-}
-function mergeProps(state, { dispatch }, props) {
-	if (state.hwCourses === null) {
-		dispatch(loadDefaultHWCourses());
-	}
-	return { ...state, dispatch, ...props };
 }
 export default compose(
 	withStyles(styles),
 	connect(
 		mapStateToProps,
-		mapDispatchToProps,
-		mergeProps
+		mapDispatchToProps
 	)
 )(HWDashboard);

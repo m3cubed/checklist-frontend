@@ -37,27 +37,14 @@ const store = createStore(reducer, middleware);
 // store.subscribe(() => {
 // 	saveState(store.getState());
 // });
-auth
-	.checkAuthentication(store.dispatch)
-	.then(() => {
-		ReactDOM.render(
-			<Provider store={store}>
-				<MuiThemeProvider theme={theme}>
-					<App auth={auth} />
-				</MuiThemeProvider>
-			</Provider>,
-			document.getElementById("root")
-		);
-	})
-	.catch(err => {
-		console.log(err);
-		ReactDOM.render(
-			<Provider store={store}>
-				<MuiThemeProvider theme={theme}>
-					<App auth={auth} />
-				</MuiThemeProvider>
-			</Provider>,
-			document.getElementById("root")
-		);
-	});
+auth.checkAuthentication(store.dispatch).then(() => {
+	ReactDOM.render(
+		<Provider store={store}>
+			<MuiThemeProvider theme={theme}>
+				<App auth={auth} />
+			</MuiThemeProvider>
+		</Provider>,
+		document.getElementById("root")
+	);
+});
 registerServiceWorker();

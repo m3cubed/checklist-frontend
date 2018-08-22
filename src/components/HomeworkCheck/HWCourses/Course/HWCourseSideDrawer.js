@@ -24,34 +24,43 @@ const styles = theme => ({
 });
 class HWCourseSideDrawer extends Component {
 	state = {
-		open: false
+		viewOpen: false,
+		addOpen: false
 	};
 
-	handleOpen = () => {
+	handleViewToggle = () => {
 		this.setState(state => ({
-			open: !state.open
+			viewOpen: !state.viewOpen
 		}));
 	};
 
+	handleAddToggle = () => {
+		this.setState(state => ({
+			addOpen: !state.addOpen
+		}));
+	};
+
+	handleViewChange = view => () => {
+		this.props.dispatch(changeViewState(view));
+		this.props.toggleDrawer();
+	};
+
 	render() {
-		const { dispatch, classes } = this.props;
+		const { classes } = this.props;
 		return (
 			<Fragment>
 				<List>
-					<ListItem button onClick={this.handleOpen}>
+					<ListItem button onClick={this.handleViewToggle}>
 						<ListItemText>Views</ListItemText>
-						{this.state.open ? <ExpandLess /> : <ExpandMore />}
+						{this.state.viewOpen ? <ExpandLess /> : <ExpandMore />}
 					</ListItem>
-					<Collapse in={this.state.open} timeout="auto" unmountOnExit>
+					<Collapse in={this.state.viewOpen} timeout="auto" unmountOnExit>
 						<List>
 							<ListItem
 								inset
 								button
 								className={classes.nestedList}
-								onClick={() => {
-									dispatch(changeViewState("Table View"));
-									this.props.toggleDrawer();
-								}}
+								onClick={this.handleViewChange("Table View")}
 							>
 								<ListItemText>Table View</ListItemText>
 							</ListItem>
@@ -62,12 +71,27 @@ class HWCourseSideDrawer extends Component {
 								inset
 								button
 								className={classes.nestedList}
-								onClick={() => {
-									dispatch(changeViewState("Seating View"));
-									this.props.toggleDrawer();
-								}}
+								onClick={this.handleViewChange("Seating View")}
 							>
 								<ListItemText>Seating View</ListItemText>
+							</ListItem>
+						</List>
+					</Collapse>
+					<Divider />
+					<ListItem button onClick={this.handleAddToggle}>
+						<ListItemText>Add</ListItemText>
+						{this.state.addOpen ? <ExpandLess /> : <ExpandMore />}
+					</ListItem>
+					<Collapse in={this.state.addOpen} timeout="auto" unmountOnExit>
+						<List>
+							<ListItem inset button className={classes.nestedList}>
+								<ListItemText>Unit</ListItemText>
+							</ListItem>
+						</List>
+						<Divider />
+						<List>
+							<ListItem inset button className={classes.nestedList}>
+								<ListItemText>Student</ListItemText>
 							</ListItem>
 						</List>
 					</Collapse>

@@ -27,6 +27,9 @@ const styles = theme => ({
 		height: 650,
 		backgroundColor: theme.palette.primary,
 		display: "block"
+	},
+	tabBtn: {
+		button: {}
 	}
 });
 
@@ -80,9 +83,6 @@ class HWCourseUnitTabs extends Component {
 							{Object.keys(hwUnits).map(item => (
 								<Tab label={hwUnits[item].unitTitle} value={item} key={item} />
 							))}
-							<Button onClick={this.props.toggleUnitDialogOpen}>
-								Add a Unit
-							</Button>
 						</Tabs>
 					</AppBar>
 				</Grid>

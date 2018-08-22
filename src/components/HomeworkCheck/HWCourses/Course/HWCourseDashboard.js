@@ -49,6 +49,7 @@ const styles = theme => ({
 const HWCourseDashboard = props => {
 	const { id } = props.match.params;
 	const { dispatch } = props;
+
 	if (props.hwUnits === null || props.hwStudents === null) {
 		loadingAPI(dispatch, [
 			{ action: loadDefaultHWStudents, condition: id },

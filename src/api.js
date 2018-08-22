@@ -75,6 +75,7 @@ export function loadDefaults(dispatch) {
 
 export function loadingAPI(dispatch, dispatchArray) {
 	dispatch(showLoading());
+
 	const promises = dispatchArray.reduce((acc, cv) => {
 		acc.push(
 			new Promise((resolve, reject) => {

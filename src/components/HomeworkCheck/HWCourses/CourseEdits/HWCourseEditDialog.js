@@ -6,16 +6,14 @@ import { connect } from "react-redux";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
 import Grid from "@material-ui/core/Grid";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import { handleUpdateHWCourse } from "../../../../actions/HomeworkCheck/hwCourses";
 //Redux
-import { handleAddHWCourse } from "../../actions/HomeworkCheck/hwCourses";
 
 const styles = theme => ({
 	root: {
@@ -23,7 +21,7 @@ const styles = theme => ({
 	}
 });
 
-class HWAddCourseDialog extends Component {
+class HWCourseEditDialog extends Component {
 	state = {
 		courseTitle: "",
 		grade: "",
@@ -34,6 +32,12 @@ class HWAddCourseDialog extends Component {
 		courseDescription: ""
 	};
 
+	componentDidMount() {
+		this.setState({
+			...this.props.course
+		});
+	}
+
 	handleChangeValue = event => {
 		this.setState({
 			[event.target.id]: event.target.value
@@ -42,15 +46,19 @@ class HWAddCourseDialog extends Component {
 
 	handleSubmit = e => {
 		e.preventDefault();
-		this.props.toggle();
-		this.props.dispatch(handleAddHWCourse(this.state));
+		this.handleToggle();
+		this.props.dispatch(handleUpdateHWCourse(this.state));
+	};
+
+	handleToggle = () => {
+		this.props.toggle("openEdit");
 	};
 
 	render() {
 		return (
-			<Dialog open={this.props.open} onClose={this.props.toggle}>
+			<Dialog open={this.props.open} onClose={this.handleToggle}>
 				<form onSubmit={this.handleSubmit}>
-					<DialogTitle>Input information for the new class</DialogTitle>
+					<DialogTitle>Edit class details</DialogTitle>
 					<DialogContent>
 						<Grid
 							container
@@ -100,9 +108,9 @@ class HWAddCourseDialog extends Component {
 						</Grid>
 					</DialogContent>
 					<DialogActions>
-						<Button onClick={this.props.toggle}>Cancel</Button>
+						<Button onClick={this.handleToggle}>Cancel</Button>
 						<Button type="submit" color="primary">
-							Create!
+							Submit!
 						</Button>
 					</DialogActions>
 				</form>
@@ -114,4 +122,4 @@ class HWAddCourseDialog extends Component {
 export default compose(
 	withStyles(styles),
 	connect()
-)(HWAddCourseDialog);
+)(HWCourseEditDialog);

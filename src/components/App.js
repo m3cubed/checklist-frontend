@@ -1,6 +1,5 @@
 // App.js
 import React, { Component } from "react";
-import { hot } from "react-hot-loader";
 import compose from "recompose/compose";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
@@ -73,7 +72,7 @@ const AuthTeacherRoute = ({
 		{...rest}
 		render={props =>
 			auth.loggedIn ? (
-				authUser.status === "teacher" ? (
+				authUser.status === "teacher" || authUser.status === "admin" ? (
 					<Component {...props} />
 				) : (
 					<Redirect to="/" />
@@ -220,7 +219,6 @@ function mapStateToProps({ authUser, loading }) {
 }
 
 export default compose(
-	hot(module),
 	withStyles(styles),
 	connect(mapStateToProps)
 )(App);
