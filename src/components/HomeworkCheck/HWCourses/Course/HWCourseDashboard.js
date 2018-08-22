@@ -49,7 +49,6 @@ const styles = theme => ({
 const HWCourseDashboard = props => {
 	const { id } = props.match.params;
 	const { dispatch } = props;
-
 	if (props.hwUnits === null || props.hwStudents === null) {
 		loadingAPI(dispatch, [
 			{ action: loadDefaultHWStudents, condition: id },
@@ -62,23 +61,29 @@ const HWCourseDashboard = props => {
 
 		return null;
 	} else {
-		dispatch(
-			changeNavbarTitle({
-				value: [props.hwCourses[id].courseTitle],
-				location: "HWCheck Course"
-			})
-		);
-		dispatch(changeViewState("Table View"));
 		return <RenderDashBoard {...props} />;
 	}
 };
 
 class RenderDashBoard extends Component {
+	componentDidMount() {
+		const { id } = this.props.match.params;
+		const { dispatch } = this.props;
+		dispatch(
+			changeNavbarTitle({
+				value: [this.props.hwCourses[id].courseTitle],
+				location: "HWCheck Course"
+			})
+		);
+		dispatch(changeViewState("Table View"));
+	}
+
 	componentWillUnmount() {
 		this.props.dispatch(loadHWStudents(null));
 		this.props.dispatch(loadHWUnits(null));
 		this.props.dispatch(loadHWStatus(null));
 		this.props.dispatch(loadHomeworks(null));
+		this.props.dispatch(loadHWStatus(null));
 	}
 	state = {
 		studentDialog: false,
@@ -146,11 +151,13 @@ class RenderDashBoard extends Component {
 
 		return (
 			<Paper className={classes.root}>
-				<HWCourseStudentAddDialog
-					open={this.state.studentDialog}
-					toggle={this.toggleStudentDialogClose}
-					courseID={id}
-				/>
+				{this.state.studentDialog ? (
+					<HWCourseStudentAddDialog
+						open={this.state.studentDialog}
+						toggle={this.toggleStudentDialogClose}
+						courseID={id}
+					/>
+				) : null}
 
 				<HWCourseHWAddDialog
 					open={this.state.hwDialog}

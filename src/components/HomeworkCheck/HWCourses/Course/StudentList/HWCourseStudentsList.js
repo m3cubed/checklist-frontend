@@ -26,7 +26,8 @@ import ListStatusMenu from "./ListStatusMenu";
 import {
 	updateStudentStatus,
 	loadStudentStatus,
-	handleUpdateColumn
+	handleUpdateColumn,
+	saveAllStatus
 } from "../../../../../actions/HomeworkCheck/studentHWStatus";
 
 const styles = theme => ({
@@ -106,7 +107,11 @@ function _createState(props) {
 	const { homeworks, hwStudents } = props;
 	const hwKeys = Object.keys(homeworks);
 	const hwTitles = hwKeys.reduce((acc, cv) => {
-		acc.push([homeworks[cv].homeworkTitle, homeworks[cv].submitDate]);
+		acc.push([
+			homeworks[cv].homeworkTitle,
+			homeworks[cv].submitDate,
+			homeworks[cv].id
+		]);
 		return acc;
 	}, []);
 
@@ -123,6 +128,21 @@ function _createState(props) {
 			hwStudents[cv].lastName,
 			hwStudents[cv].id
 		]);
+	});
+
+	state.students.sort((a, b) => {
+		let A = a[1].toUpperCase();
+		let B = b[1].toUpperCase();
+
+		if (A < B) {
+			return -1;
+		}
+		if (A > B) {
+			return 1;
+		}
+
+		// names must be equal
+		return 0;
 	});
 
 	state.studentsRowLength = Object.keys(state.students).length;
@@ -189,11 +209,14 @@ class HWCourseStudentsList extends Component {
 		}
 	}
 
+	componentWillUnmount() {
+		this.props.dispatch(saveAllStatus(this.props.courseID));
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = {
 			..._createState(this.props),
-			// studentStatus: _createStudentStatus(this.props),
 			openHWMenu: false,
 			openStatusMenu: false,
 			anchorEl: null,
@@ -233,6 +256,7 @@ class HWCourseStudentsList extends Component {
 						variant="contained"
 						color="primary"
 						size="small"
+						onClick={this.props.toggleAddHW}
 						style={{
 							paddingTop: 6,
 							paddingBottom: 6,
@@ -259,7 +283,7 @@ class HWCourseStudentsList extends Component {
 				className={this.props.classes.topRow}
 				aria-owns={this.state.anchorEl ? "HW_header_menu" : null}
 				onClick={this.toggleHWMenu(
-					this.state.homeworks[rowIndex][columnIndex][0]
+					this.state.homeworks[rowIndex][columnIndex][2]
 				)}
 				justify="center"
 				alignItems="center"
@@ -337,8 +361,14 @@ class HWCourseStudentsList extends Component {
 				/>
 			);
 		} else {
-			const whichHW = homeworks[0][columnIndex][0];
+			const whichHW = homeworks[0][columnIndex][2];
 			const whichStudent = students[rowIndex][2];
+			const status =
+				studentHWStatus[whichHW] === undefined ||
+				studentHWStatus[whichHW][whichStudent] === undefined
+					? null
+					: studentHWStatus[whichHW][whichStudent];
+
 			return (
 				<Grid
 					container
@@ -349,26 +379,24 @@ class HWCourseStudentsList extends Component {
 						backgroundColor: rowIndex % 2 === 1 ? "#f5f5f5" : "none"
 					}}
 					aria-owns={this.state.statusAnchorEl ? "status_body_menu" : null}
-					onClick={this.toggleStatusMenu(whichHW, whichStudent)}
+					onClick={this.toggleStudentCellClick(whichHW, whichStudent, status)}
+					onContextMenu={this.toggleStatusMenu(whichHW, whichStudent)}
 					justify="center"
 					alignItems="center"
 				>
-					{studentHWStatus[whichHW] === undefined ||
-					studentHWStatus[whichHW][whichStudent] === undefined ? null : (
+					{status === null ? null : (
 						<Grid
 							item
 							xs={9}
 							className={this.props.classes.statusContainer}
 							style={{
-								backgroundColor: hwStatus[
-									studentHWStatus[whichHW][whichStudent]
-								]
-									? hwStatus[studentHWStatus[whichHW][whichStudent]].color
-									: "none"
+								backgroundColor: hwStatus[status]
+									? hwStatus[status].color
+									: "inherit"
 							}}
 							align="center"
 						>
-							<Typography>{studentHWStatus[whichHW][whichStudent]}</Typography>
+							<Typography>{status}</Typography>
 						</Grid>
 					)}
 				</Grid>
@@ -385,12 +413,22 @@ class HWCourseStudentsList extends Component {
 	};
 
 	toggleStatusMenu = (homework, student) => e => {
+		e.preventDefault();
 		this.setState({
 			openStatusMenu: !this.state.openStatusMenu,
 			statusAnchorEl:
 				this.state.statusAnchorEl === null ? e.currentTarget : null,
 			target: [homework, student]
 		});
+	};
+
+	toggleStudentCellClick = (homework, student, status) => e => {
+		e.preventDefault();
+		if (status === "Complete") {
+			this.props.dispatch(updateStudentStatus(homework, student, "Incomplete"));
+		} else {
+			this.props.dispatch(updateStudentStatus(homework, student, "Complete"));
+		}
 	};
 
 	changeStudentStatus(status) {

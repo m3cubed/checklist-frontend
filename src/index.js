@@ -8,6 +8,8 @@ import Auth from "./components/Login/Auth";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import middleware from "./middleware";
 import reducer from "./reducers";
+import { loadState, saveState } from "./localState";
+import throttle from "lodash/throttle";
 import "typeface-roboto";
 
 const auth = new Auth();
@@ -28,15 +30,18 @@ const theme = createMuiTheme({
 	}
 });
 
-//import { loadState, saveState } from "./localState";
+const persistedState = loadState();
 
-//const persistedState = loadState();
+const store = createStore(reducer, persistedState, middleware);
 
-const store = createStore(reducer, middleware);
+store.subscribe(
+	throttle(() => {
+		saveState({
+			studentHWStatus: store.getState().studentHWStatus
+		});
+	}, 1000)
+);
 
-// store.subscribe(() => {
-// 	saveState(store.getState());
-// });
 auth.checkAuthentication(store.dispatch).then(() => {
 	ReactDOM.render(
 		<Provider store={store}>

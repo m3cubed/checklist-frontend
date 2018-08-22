@@ -54,7 +54,7 @@ class HWCourseHWAddDialog extends Component {
 		return (
 			<Dialog open={this.props.open} onClose={this.props.toggle}>
 				<form onSubmit={this.handleSubmit}>
-					<DialogTitle>Add a student</DialogTitle>
+					<DialogTitle>Add a homework</DialogTitle>
 					<DialogContent>
 						<Grid container spacing={16} justify="center" alignItems="center">
 							<Grid item xs={6}>

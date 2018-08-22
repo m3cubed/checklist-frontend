@@ -77,24 +77,6 @@ class HWCourseSideDrawer extends Component {
 							</ListItem>
 						</List>
 					</Collapse>
-					<Divider />
-					<ListItem button onClick={this.handleAddToggle}>
-						<ListItemText>Add</ListItemText>
-						{this.state.addOpen ? <ExpandLess /> : <ExpandMore />}
-					</ListItem>
-					<Collapse in={this.state.addOpen} timeout="auto" unmountOnExit>
-						<List>
-							<ListItem inset button className={classes.nestedList}>
-								<ListItemText>Unit</ListItemText>
-							</ListItem>
-						</List>
-						<Divider />
-						<List>
-							<ListItem inset button className={classes.nestedList}>
-								<ListItemText>Student</ListItemText>
-							</ListItem>
-						</List>
-					</Collapse>
 				</List>
 				<Divider />
 			</Fragment>
@@ -106,3 +88,22 @@ export default compose(
 	withStyles(styles),
 	connect()
 )(HWCourseSideDrawer);
+
+// <Divider />
+// <ListItem button onClick={this.handleAddToggle}>
+// 	<ListItemText>Add</ListItemText>
+// 	{this.state.addOpen ? <ExpandLess /> : <ExpandMore />}
+// </ListItem>
+// <Collapse in={this.state.addOpen} timeout="auto" unmountOnExit>
+// 	<List>
+// 		<ListItem inset button className={classes.nestedList}>
+// 			<ListItemText>Unit</ListItemText>
+// 		</ListItem>
+// 	</List>
+// 	<Divider />
+// 	<List>
+// 		<ListItem inset button className={classes.nestedList}>
+// 			<ListItemText>Student</ListItemText>
+// 		</ListItem>
+// 	</List>
+// </Collapse>

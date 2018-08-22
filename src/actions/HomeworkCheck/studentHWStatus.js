@@ -66,7 +66,8 @@ export function handleAddStudentStatus(studentHWStatus) {
 }
 
 export function loadDefaultStudentStatus(courseID, resolve, reject) {
-	return dispatch => {
+	return (dispatch, getState) => {
+		const { studentHWStatus } = getState();
 		fetch(`${CONNECTION}/student_homework_status/retrieve`, {
 			method: "PUT",
 			credentials: "include",
@@ -78,7 +79,11 @@ export function loadDefaultStudentStatus(courseID, resolve, reject) {
 			.then(res => res.json())
 			.then(json => {
 				if (json.completed === true) {
-					dispatch(loadStudentStatus(json.studentHWStatus));
+					if (json.studentHWStatus !== studentHWStatus) {
+						dispatch(saveAllStatus(courseID));
+					} else {
+						dispatch(loadStudentStatus(json.studentHWStatus));
+					}
 					resolve();
 				} else {
 					reject();
@@ -87,12 +92,12 @@ export function loadDefaultStudentStatus(courseID, resolve, reject) {
 	};
 }
 
-export function handleUpdateColumn(homeworkTitle, statusTitle) {
+export function handleUpdateColumn(hwID, statusTitle) {
 	return (dispatch, getState) => {
 		const { hwStudents } = getState();
 
 		const column = {
-			id: homeworkTitle,
+			id: hwID,
 			values: {}
 		};
 		Object.keys(hwStudents).forEach(cv => {
@@ -100,5 +105,23 @@ export function handleUpdateColumn(homeworkTitle, statusTitle) {
 		});
 
 		dispatch(updateColumnStatus(column));
+	};
+}
+
+export function saveAllStatus(courseID) {
+	return (dispatch, getState) => {
+		const { studentHWStatus } = getState();
+		const statusList = studentHWStatus;
+		console.log(1);
+		fetch(`${CONNECTION}/student_homework_status/upsert`, {
+			method: "PUT",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({ statusList, courseID })
+		})
+			.then(res => res.json())
+			.then(json => console.log(json));
 	};
 }

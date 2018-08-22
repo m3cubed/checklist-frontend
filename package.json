@@ -31,15 +31,14 @@
 		"typeface-roboto": "0.0.54"
 	},
 	"scripts": {
-		"react-hot": "react-app-rewired start",
 		"react-start-production": "cross-env NODE_ENV=production npm run react-start",
 		"start": "react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test --env=jsdom",
 		"eject": "react-scripts eject",
 		"postinstall": "react-scripts build",
-		"heroku-postinstall": "react-scripts build",
-		"server": "cross-env NODE_ENV=production && nodemon server.js"
+		"heroku-preinstall": "react-scripts build",
+		"server": "cross-env NODE_ENV=production && npm run build && nodemon server.js"
 	},
 	"devDependencies": {
 		"cross-env": "^5.2.0",

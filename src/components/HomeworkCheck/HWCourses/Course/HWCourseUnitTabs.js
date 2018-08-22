@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import compose from "recompose/compose";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
@@ -9,8 +9,10 @@ import Tab from "@material-ui/core/Tab";
 import Paper from "@material-ui/core/Paper";
 import AppBar from "@material-ui/core/AppBar";
 import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 //Icons
 import AddBoxIcon from "@material-ui/icons/AddBox";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 //Components
 import HWCourseStudentsList from "./StudentList/HWCourseStudentsList";
 
@@ -59,9 +61,18 @@ class HWCourseUnitTabs extends Component {
 
 	mountTable(unitID) {
 		return (
-			<HWCourseStudentsList unitID={unitID} courseID={this.props.courseID} />
+			<HWCourseStudentsList
+				unitID={unitID}
+				courseID={this.props.courseID}
+				toggleAddHW={this.props.toggleHWDialogOpen}
+			/>
 		);
 	}
+
+	handleTabValue = (e, value) => {
+		this.setState({ value });
+		this.props.toggleUnitID(value);
+	};
 
 	render() {
 		const { hwUnits, classes } = this.props;
@@ -71,30 +82,39 @@ class HWCourseUnitTabs extends Component {
 			<Grid container spocing={0} className={classes.root} justify="center">
 				<Grid item xs={11}>
 					<AppBar className={classes.unitBar} color="default">
-						<Tabs
-							value={this.state.value}
-							onChange={(e, value) => {
-								this.setState({ value });
-								this.props.toggleUnitID(value);
-							}}
-							indicatorColor="primary"
-							textColor="primary"
-						>
-							{Object.keys(hwUnits).map(item => (
-								<Tab label={hwUnits[item].unitTitle} value={item} key={item} />
-							))}
-						</Tabs>
+						<Grid container alignItems="center">
+							<Grid item xs="auto">
+								<Tabs
+									value={this.state.value}
+									onChange={this.handleTabValue}
+									indicatorColor="primary"
+									textColor="primary"
+								>
+									{Object.keys(hwUnits).map(item => (
+										<Tab
+											label={hwUnits[item].unitTitle}
+											value={item}
+											key={item}
+										/>
+									))}
+								</Tabs>
+							</Grid>
+
+							<Grid item xs={1}>
+								<Button
+									color="primary"
+									onClick={this.props.toggleUnitDialogOpen}
+								>
+									<AddBoxIcon />
+								</Button>
+							</Grid>
+						</Grid>
 					</AppBar>
 				</Grid>
 				<Grid item xs={11}>
 					<div className={classes.gridContainer}>
 						{this.state.value ? (
 							<Grid container spacing={8} justify="center" alignItems="center">
-								<Grid item xs={12}>
-									<Button onClick={this.props.toggleHWDialogOpen}>
-										Add a homework
-									</Button>
-								</Grid>
 								<Grid item xs={12}>
 									{this.props.studentHWStatus === null ? null : (
 										<div style={{ height: 500 }}>
@@ -103,7 +123,18 @@ class HWCourseUnitTabs extends Component {
 									)}
 								</Grid>
 							</Grid>
-						) : null}
+						) : (
+							<Grid container spacing={16} style={{ marginLeft: 12 }}>
+								<Grid item>
+									<ArrowUpwardIcon color="primary" />
+								</Grid>
+								<Grid item>
+									<Typography variant="headline">
+										Press the + button to get started!
+									</Typography>
+								</Grid>
+							</Grid>
+						)}
 					</div>
 				</Grid>
 			</Grid>

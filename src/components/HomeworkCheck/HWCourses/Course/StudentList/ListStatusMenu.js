@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 
-const ListStatusMenu = (props, ref) => {
+const ListStatusMenu = props => {
 	const { anchorEl, open, toggle, hwStatus, change } = props;
 
 	const changeStatus = status => () => {
