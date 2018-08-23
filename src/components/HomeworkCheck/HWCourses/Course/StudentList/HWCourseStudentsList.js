@@ -8,27 +8,24 @@ import scrollbarSize from "dom-helpers/util/scrollbarSize";
 //Accessories
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import { Grid as VGrid, ScrollSync, AutoSizer } from "react-virtualized";
+import Input from "@material-ui/core/Input";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import { Grid as VGrid, ScrollSync, AutoSizer } from "react-virtualized";
 //Icons
 import AddIcon from "@material-ui/icons/Add";
-//Redux
-import {
-	randomFirstName,
-	randomLastName,
-	loadingAPI
-} from "../../../../../api";
 //Components
 import ListFirstLastNames from "./ListFirstLastNames";
-import ListHWMenu from "./ListHWMenu";
-import ListStatusMenu from "./ListStatusMenu";
+import ListHWMenu from "../Menus/ListHWMenu";
+import ListStatusMenu from "../Menus/ListStatusMenu";
 import {
 	updateStudentStatus,
-	loadStudentStatus,
 	handleUpdateColumn,
 	saveAllStatus
 } from "../../../../../actions/HomeworkCheck/studentHWStatus";
+import ListStudentMenu from "../Menus/ListStudentMenu";
+import { handleUpdateHWStudent } from "../../../../../actions/HomeworkCheck/hwStudents";
 
 const styles = theme => ({
 	root: {
@@ -79,29 +76,11 @@ const styles = theme => ({
 		display: "flex",
 		justifyContent: "center",
 		alignItems: "center"
+	},
+	editInput: {
+		textAlign: "center"
 	}
 });
-
-function _createStudentStatus(props) {
-	const { homeworks, hwStudents, studentHWStatus, dispatch } = props;
-	const homeworkKeys = Object.keys(homeworks);
-
-	const studentObj = Object.keys(hwStudents).reduce((acc, cv) => {
-		acc[hwStudents[cv].id] = "Null";
-		return acc;
-	}, {});
-
-	const statusObj = homeworkKeys.reduce((acc, cv) => {
-		acc[homeworks[cv].homeworkTitle] = studentObj;
-		return acc;
-	}, {});
-
-	const tempList = update(statusObj, {
-		$merge: studentHWStatus
-	});
-
-	return tempList;
-}
 
 function _createState(props) {
 	const { homeworks, hwStudents } = props;
@@ -183,7 +162,7 @@ class HWCourseStudentsList extends Component {
 		}
 	}
 
-	componentDidUpdate(prevProps) {
+	componentDidUpdate(prevProps, prevState) {
 		if (
 			prevProps.studentHWStatus !== this.props.studentHWStatus &&
 			this._setStudentBodyRef
@@ -207,6 +186,9 @@ class HWCourseStudentsList extends Component {
 			this._setStudentColRef.current.recomputeGridSize();
 			this._setStudentBodyRef.current.recomputeGridSize();
 		}
+		if (prevState.studentEdit !== this.state.studentEdit) {
+			this._setStudentColRef.current.recomputeGridSize();
+		}
 	}
 
 	componentWillUnmount() {
@@ -219,12 +201,18 @@ class HWCourseStudentsList extends Component {
 			..._createState(this.props),
 			openHWMenu: false,
 			openStatusMenu: false,
+			openStudentMenu: false,
 			anchorEl: null,
 			statusAnchorEl: null,
+			studentAnchorEl: null,
 			target: null,
+			targetHW: null,
+			targetStudent: null,
 			bodyColWidth: 140,
 			bodyRowHeight: 50,
-			targetHW: null
+			studentEdit: null,
+			hwEdit: null,
+			tempEdit: ""
 		};
 
 		this._setStudentBodyRef = React.createRef();
@@ -269,41 +257,44 @@ class HWCourseStudentsList extends Component {
 				</Grid>
 			);
 		}
+
 		if (this.state.homeworks[rowIndex][columnIndex] === undefined) {
 			return (
 				<div key={key} style={style} className={this.props.classes.topRow} />
 			);
+		} else {
+			const homework = this.state.homeworks[rowIndex][columnIndex];
+			return (
+				<Grid
+					container
+					key={key}
+					spacing={0}
+					style={style}
+					className={this.props.classes.topRow}
+					aria-owns={this.state.anchorEl ? "HW_header_menu" : null}
+					onContextMenu={this.toggleHWMenu(homework[2])}
+					justify="center"
+					alignItems="center"
+				>
+					<Grid item xs={12} align="center">
+						<Typography variant="body1">{homework[0]}</Typography>
+					</Grid>
+					{homework[1] ? (
+						<Grid item xs={12} align="center">
+							<Typography variant="caption">
+								{_dateConvertor(homework[1])}
+							</Typography>
+						</Grid>
+					) : null}
+				</Grid>
+			);
 		}
-		return (
-			<Grid
-				container
-				key={key}
-				spacing={0}
-				style={style}
-				className={this.props.classes.topRow}
-				aria-owns={this.state.anchorEl ? "HW_header_menu" : null}
-				onClick={this.toggleHWMenu(
-					this.state.homeworks[rowIndex][columnIndex][2]
-				)}
-				justify="center"
-				alignItems="center"
-			>
-				<Grid item xs={12} align="center">
-					<Typography variant="body1">
-						{this.state.homeworks[rowIndex][columnIndex][0]}
-					</Typography>
-				</Grid>
-				<Grid item xs={12} align="center">
-					<Typography variant="caption">
-						{_dateConvertor(this.state.homeworks[rowIndex][columnIndex][1])}
-					</Typography>
-				</Grid>
-			</Grid>
-		);
 	}
 
 	_renderStudentColumnCell({ columnIndex, key, rowIndex, style }) {
-		if (this.state.students[rowIndex] === undefined) {
+		const student = this.state.students[rowIndex];
+
+		if (student === undefined) {
 			return (
 				<div
 					className={
@@ -317,6 +308,39 @@ class HWCourseStudentsList extends Component {
 						backgroundColor: rowIndex % 2 === 1 ? "#f5f5f5" : "none"
 					}}
 				/>
+			);
+		}
+		if (
+			this.state.studentEdit &&
+			student[2] === this.state.studentEdit[0] &&
+			columnIndex === this.state.studentEdit[1]
+		) {
+			return (
+				<Grid
+					container
+					className={
+						columnIndex === 0
+							? this.props.classes.studentColLeft
+							: this.props.classes.studentCol
+					}
+					key={key}
+					style={{
+						...style,
+						backgroundColor: rowIndex % 2 === 1 ? "#f5f5f5" : "none"
+					}}
+					justify="center"
+					alignItems="center"
+				>
+					<ClickAwayListener onClickAway={this.handleStudentUpdate}>
+						<Input
+							fullWidth
+							autoFocus
+							classes={{ input: this.props.classes.editInput }}
+							defaultValue={this.state.studentEdit[2]}
+							onChange={this.handleStudentEdit}
+						/>
+					</ClickAwayListener>
+				</Grid>
 			);
 		}
 		return (
@@ -334,10 +358,14 @@ class HWCourseStudentsList extends Component {
 				}}
 				justify="center"
 				alignItems="center"
+				onClick={this.toggleStudentEdit([
+					student[2],
+					columnIndex,
+					student[columnIndex]
+				])}
+				onContextMenu={this.toggleStudentMenu(student[2])}
 			>
-				<Typography variant="subheading">
-					{this.state.students[rowIndex][columnIndex]}
-				</Typography>
+				<Typography variant="subheading">{student[columnIndex]}</Typography>
 			</Grid>
 		);
 	}
@@ -404,11 +432,77 @@ class HWCourseStudentsList extends Component {
 		}
 	}
 
+	handleStudentEdit = e => {
+		const { studentEdit } = this.state;
+		studentEdit[2] = e.target.value;
+		this.setState({
+			studentEdit
+		});
+	};
+
+	toggleStudentEdit = (target, value) => () => {
+		this.setState({
+			studentEdit: target,
+			tempEdit: value
+		});
+	};
+
+	handleStudentUpdate = () => {
+		const { studentEdit } = this.state;
+		let student = { id: studentEdit[0] };
+
+		console.log(1);
+		switch (studentEdit[1]) {
+			case 0: {
+				student.firstName = studentEdit[2];
+				break;
+			}
+			case 1: {
+				student.lastName = studentEdit[2];
+				break;
+			}
+			default:
+				null;
+		}
+		this.setState({
+			studentEdit: null
+		});
+		this.props.dispatch(handleUpdateHWStudent(student));
+	};
+
 	toggleHWMenu = homework => e => {
+		e.preventDefault();
 		this.setState({
 			openHWMenu: !this.state.openHWMenu,
 			anchorEl: this.state.anchorEl === null ? e.currentTarget : null,
-			targetHW: homework
+			targetHW: homework || null
+		});
+	};
+
+	closeHWMenu = () => {
+		this.setState({
+			openHWMenu: false,
+			anchorEl: null,
+			targetHW: null
+		});
+	};
+
+	toggleStudentMenu = student => e => {
+		e.preventDefault();
+
+		this.setState({
+			openStudentMenu: !this.state.openStudentMenu,
+			studentAnchorEl:
+				this.state.studentAnchorEl === null ? e.currentTarget : null,
+			targetStudent: student || null
+		});
+	};
+
+	closeStudentMenu = () => {
+		this.setState({
+			openStudentMenu: false,
+			studentAnchorEl: null,
+			targetStudent: null
 		});
 	};
 
@@ -418,7 +512,7 @@ class HWCourseStudentsList extends Component {
 			openStatusMenu: !this.state.openStatusMenu,
 			statusAnchorEl:
 				this.state.statusAnchorEl === null ? e.currentTarget : null,
-			target: [homework, student]
+			target: [homework, student] || null
 		});
 	};
 
@@ -460,20 +554,37 @@ class HWCourseStudentsList extends Component {
 
 	render() {
 		const { classes } = this.props;
+
 		return (
 			<div className={classes.root}>
-				<ListHWMenu
-					open={this.state.openHWMenu}
-					toggle={this.toggleHWMenu}
-					anchorEl={this.state.anchorEl}
-					change={this.changeStudentCol}
-				/>
-				<ListStatusMenu
-					open={this.state.openStatusMenu}
-					toggle={this.toggleStatusMenu}
-					anchorEl={this.state.statusAnchorEl}
-					change={this.changeStudentStatus}
-				/>
+				{this.state.openStudentMenu ? (
+					<ListStudentMenu
+						open={this.state.openStudentMenu}
+						toggle={this.closeStudentMenu}
+						anchorEl={this.state.studentAnchorEl}
+						target={this.state.targetStudent}
+					/>
+				) : null}
+
+				{this.state.openHWMenu ? (
+					<ListHWMenu
+						open={this.state.openHWMenu}
+						toggle={this.closeHWMenu}
+						anchorEl={this.state.anchorEl}
+						change={this.changeStudentCol}
+						target={this.state.targetHW}
+					/>
+				) : null}
+
+				{this.state.openStatusMenu ? (
+					<ListStatusMenu
+						open={this.state.openStatusMenu}
+						toggle={this.toggleStatusMenu}
+						anchorEl={this.state.statusAnchorEl}
+						change={this.changeStudentStatus}
+					/>
+				) : null}
+
 				<AutoSizer>
 					{({ height, width }) => (
 						<ScrollSync>

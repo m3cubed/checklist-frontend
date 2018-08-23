@@ -7,15 +7,11 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Grid from "@material-ui/core/Grid";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Paper from "@material-ui/core/Paper";
-//Redux
-import { handleAddHWStudent } from "../../../../actions/HomeworkCheck/hwStudents";
-import HWCourseStudentAddTable from "./HWCourseStudentAddTable";
+import { handleAddHWUnit } from "../../../../../actions/HomeworkCheck/hwUnits";
 
 const styles = theme => ({
 	root: {
@@ -28,10 +24,11 @@ const styles = theme => ({
 
 class HWCourseStudentAddDialog extends Component {
 	state = {
-		firstName: "",
-		lastName: "",
-		gender: "",
-		courseID: this.props.courseID
+		courseID: this.props.courseID,
+		unitTitle: "",
+		unitStartDate: "",
+		unitEndDate: "",
+		unitDescription: ""
 	};
 
 	handleValue = e => {
@@ -43,7 +40,7 @@ class HWCourseStudentAddDialog extends Component {
 	handleSubmit = e => {
 		e.preventDefault();
 		this.props.toggle();
-		this.props.dispatch(handleAddHWStudent(this.state));
+		this.props.dispatch(handleAddHWUnit(this.state));
 	};
 
 	render() {
@@ -51,40 +48,59 @@ class HWCourseStudentAddDialog extends Component {
 		return (
 			<Dialog open={this.props.open} onClose={this.props.toggle}>
 				<form onSubmit={this.handleSubmit}>
-					<DialogTitle>Add a student</DialogTitle>
+					<DialogTitle>Add a unit</DialogTitle>
 					<DialogContent>
 						<Grid container spacing={16} justify="center" alignItems="center">
-							<Grid item xs={6}>
+							<Grid item xs={11}>
 								<TextField
 									required
-									label="First Name"
-									id="firstName"
+									label="Unit Title"
+									id="unitTitle"
 									value={this.state.firstName}
 									onChange={this.handleValue}
 									fullWidth
 								/>
 							</Grid>
-							<Grid item xs={6}>
+							<Grid item xs={5}>
+								<hr />
+							</Grid>
+							<Grid item xs={2} align="center">
+								<DialogContentText>Optional</DialogContentText>
+							</Grid>
+							<Grid item xs={5}>
+								<hr />
+							</Grid>
+							<Grid item xs={11} sm={6}>
 								<TextField
-									required
-									label="Last Name"
-									id="lastName"
+									label="Start Date"
+									type="date"
+									id="unitStartDate"
 									value={this.state.lastName}
 									onChange={this.handleValue}
+									InputLabelProps={{
+										shrink: true
+									}}
 									fullWidth
 								/>
 							</Grid>
-							<TextField
-								label="Gender"
-								id="gender"
-								value={this.state.gender}
-								onChange={this.handleValue}
-							/>
+							<Grid item xs={11} sm={6}>
+								<TextField
+									label="End Date"
+									type="date"
+									id="unitEndDate"
+									value={this.state.gender}
+									onChange={this.handleValue}
+									InputLabelProps={{
+										shrink: true
+									}}
+									fullWidth
+								/>
+							</Grid>
 						</Grid>
 					</DialogContent>
 					<DialogActions>
 						<Button onClick={this.props.toggle}>Cancel</Button>
-						<Button color="primary">Add+</Button>
+						{/*<Button color="primary">Add+</Button>*/}
 						<Button color="primary" type="submit">
 							Add
 						</Button>
@@ -99,32 +115,3 @@ export default compose(
 	withStyles(styles),
 	connect()
 )(HWCourseStudentAddDialog);
-
-// <Grid container spacing={0} justify="center" alignItems="center">
-// <Grid item xs={6}>
-// 	<TextField
-// 		required
-// 		label="First Name"
-// 		id="firstName"
-// 		value={this.state.firstName}
-// 		onChange={this.handleValue}
-// 		fullWidth
-// 	/>
-// </Grid>
-// <Grid item xs={6}>
-// 	<TextField
-// 		required
-// 		label="Last Name"
-// 		id="lastName"
-// 		value={this.state.lastName}
-// 		onChange={this.handleValue}
-// 		fullWidth
-// 	/>
-// </Grid>
-// <TextField
-// 	label="Gender"
-// 	id="gender"
-// 	value={this.state.gender}
-// 	onChange={this.handleValue}
-// />
-// </Grid>

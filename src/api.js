@@ -73,10 +73,30 @@ export function loadDefaults(dispatch) {
 		});
 }
 
-export function loadingAPI(dispatch, dispatchArray) {
+// export function loadingAPI(dispatch, dispatchArray) {
+// 	dispatch(showLoading());
+
+// 	const promises = dispatchArray.reduce((acc, cv) => {
+// 		acc.push(
+// 			new Promise((resolve, reject) => {
+// 				if (cv.condition) {
+// 					dispatch(cv.action(cv.condition, resolve, reject));
+// 				} else {
+// 					dispatch(cv.action(resolve, reject));
+// 				}
+// 			})
+// 		);
+// 		return acc;
+// 	}, []);
+// 	Promise.all(promises).then(() => {
+// 		dispatch(hideLoading());
+// 	});
+// }
+
+export async function loadingAPI(dispatch, dispatchArray) {
 	dispatch(showLoading());
 
-	const promises = dispatchArray.reduce((acc, cv) => {
+	const promises0 = dispatchArray[0].reduce((acc, cv) => {
 		acc.push(
 			new Promise((resolve, reject) => {
 				if (cv.condition) {
@@ -88,9 +108,24 @@ export function loadingAPI(dispatch, dispatchArray) {
 		);
 		return acc;
 	}, []);
-	Promise.all(promises).then(() => {
+	await Promise.all(promises0);
+	try {
+		const promises1 = dispatchArray[1].reduce((acc, cv) => {
+			acc.push(
+				new Promise((resolve, reject) => {
+					if (cv.condition) {
+						dispatch(cv.action(cv.condition, resolve, reject));
+					} else {
+						dispatch(cv.action(resolve, reject));
+					}
+				})
+			);
+			return acc;
+		}, []);
+		await Promise.all(promises1);
+	} finally {
 		dispatch(hideLoading());
-	});
+	}
 }
 
 export function nameDuplicate(name, list, condition, filter) {

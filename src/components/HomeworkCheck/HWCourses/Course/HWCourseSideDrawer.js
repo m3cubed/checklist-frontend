@@ -12,7 +12,10 @@ import Divider from "@material-ui/core/Divider";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 //Redux
-import { changeViewState } from "../../../../actions/PageStates/hwCheckCourse";
+import {
+	changeViewState,
+	toggleShowImport
+} from "../../../../actions/PageStates/hwCheckCourse";
 
 const styles = theme => ({
 	root: {
@@ -45,6 +48,10 @@ class HWCourseSideDrawer extends Component {
 		this.props.toggleDrawer();
 	};
 
+	toggleImport = type => () => {
+		this.props.dispatch(toggleShowImport(type));
+	};
+
 	render() {
 		const { classes } = this.props;
 		return (
@@ -57,7 +64,6 @@ class HWCourseSideDrawer extends Component {
 					<Collapse in={this.state.viewOpen} timeout="auto" unmountOnExit>
 						<List>
 							<ListItem
-								inset
 								button
 								className={classes.nestedList}
 								onClick={this.handleViewChange("Table View")}
@@ -68,16 +74,37 @@ class HWCourseSideDrawer extends Component {
 						<Divider />
 						<List>
 							<ListItem
-								inset
 								button
 								className={classes.nestedList}
-								onClick={this.handleViewChange("Seating View")}
+								// onClick={this.handleViewChange("Seating View")}
 							>
 								<ListItemText>Seating View</ListItemText>
 							</ListItem>
 						</List>
 					</Collapse>
 				</List>
+				<Divider />
+				<ListItem button onClick={this.handleAddToggle}>
+					<ListItemText>Import/Copy</ListItemText>
+					{this.state.addOpen ? <ExpandLess /> : <ExpandMore />}
+				</ListItem>
+				<Collapse in={this.state.addOpen} timeout="auto" unmountOnExit>
+					<List>
+						<ListItem
+							button
+							className={classes.nestedList}
+							onClick={this.toggleImport("students")}
+						>
+							<ListItemText>Students</ListItemText>
+						</ListItem>
+					</List>
+					<Divider />
+					<List>
+						<ListItem button className={classes.nestedList}>
+							<ListItemText>Homeworks</ListItemText>
+						</ListItem>
+					</List>
+				</Collapse>
 				<Divider />
 			</Fragment>
 		);
@@ -88,22 +115,3 @@ export default compose(
 	withStyles(styles),
 	connect()
 )(HWCourseSideDrawer);
-
-// <Divider />
-// <ListItem button onClick={this.handleAddToggle}>
-// 	<ListItemText>Add</ListItemText>
-// 	{this.state.addOpen ? <ExpandLess /> : <ExpandMore />}
-// </ListItem>
-// <Collapse in={this.state.addOpen} timeout="auto" unmountOnExit>
-// 	<List>
-// 		<ListItem inset button className={classes.nestedList}>
-// 			<ListItemText>Unit</ListItemText>
-// 		</ListItem>
-// 	</List>
-// 	<Divider />
-// 	<List>
-// 		<ListItem inset button className={classes.nestedList}>
-// 			<ListItemText>Student</ListItemText>
-// 		</ListItem>
-// 	</List>
-// </Collapse>

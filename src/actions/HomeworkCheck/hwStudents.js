@@ -19,10 +19,10 @@ function addHWStudent(student) {
 	};
 }
 
-function deleteHWStudent(student) {
+function deleteHWStudent(id) {
 	return {
 		type: DELETE_HW_STUDENT,
-		student
+		id
 	};
 }
 
@@ -66,6 +66,44 @@ export function loadDefaultHWStudents(courseID, resolve, reject) {
 			.then(json => {
 				dispatch(loadHWStudents(json.students));
 				resolve();
+			});
+	};
+}
+
+export function handleDeleteHWStudent(id) {
+	return dispatch => {
+		fetch(`${CONNECTION}/students/delete`, {
+			method: "PUT",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({ id })
+		})
+			.then(res => res.json())
+			.then(json => {
+				if (json.completed) {
+					dispatch(deleteHWStudent(id));
+				}
+			});
+	};
+}
+
+export function handleUpdateHWStudent(student) {
+	return dispatch => {
+		fetch(`${CONNECTION}/students/update`, {
+			method: "PUT",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({ student })
+		})
+			.then(res => res.json())
+			.then(json => {
+				if (json.completed) {
+					dispatch(updateHWStudent(json.student));
+				}
 			});
 	};
 }

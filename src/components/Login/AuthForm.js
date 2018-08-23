@@ -1,10 +1,31 @@
 import React, { Component } from "react";
+import compose from "recompose/compose";
+import { withStyles } from "@material-ui/core/styles";
 import { Redirect, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { GoogleLogin, GoogleLogout } from "react-google-login";
 import { SHA256 } from "crypto-js";
 //Accessories
 import Grid from "@material-ui/core/Grid";
+
+import StandardLoginForm from "./StandardLoginForm";
+
+const styles = theme => ({
+	paper: {
+		display: "flex",
+		flexDirection: "column",
+		alignItems: "center",
+		padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
+			.spacing.unit * 3}px `
+	},
+	form: {
+		width: "100%",
+		marginTop: theme.spacing.unit
+	},
+	submit: {
+		marginTop: theme.spacing.unit * 3
+	}
+});
 
 const clientID = process.env.REACT_APP_GOOGLE_CLIENT;
 const APP_SECRET = process.env.REACT_APP_APP_SECRET;
@@ -74,6 +95,7 @@ class AuthForm extends Component {
 	};
 
 	render() {
+		const { classes } = this.props;
 		const { from } = this.props.location
 			? this.props.location.state
 			: { from: { pathname: "/" } };
@@ -91,6 +113,7 @@ class AuthForm extends Component {
 				style={{ height: 600 }}
 				direction="column"
 			>
+				<StandardLoginForm />
 				<Grid item xs={2} align="center">
 					<GoogleLogin
 						clientId={clientID}
@@ -115,4 +138,7 @@ class AuthForm extends Component {
 	}
 }
 
-export default connect()(withRouter(AuthForm));
+export default compose(
+	withStyles(styles),
+	connect()
+)(withRouter(AuthForm));

@@ -15,24 +15,25 @@ import AddBoxIcon from "@material-ui/icons/AddBox";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 //Components
 import HWCourseStudentsList from "./StudentList/HWCourseStudentsList";
+import ListUnitMenu from "./Menus/ListUnitMenu";
 
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
 		height: 700,
-		marginTop: 30,
+		marginTop: 30
 	},
 	unitBar: {
-		position: "static",
+		position: "static"
 	},
 	gridContainer: {
 		height: 650,
 		backgroundColor: theme.palette.primary,
-		display: "block",
+		display: "block"
 	},
 	tabBtn: {
-		button: {},
-	},
+		button: {}
+	}
 });
 
 const searchStudents = props => {
@@ -47,12 +48,17 @@ class HWCourseUnitTabs extends Component {
 	static getDerivedStateFromProps(nextProps, state) {
 		if (!state.value && nextProps) {
 			return {
-				value: Object.keys(nextProps.hwUnits)[0],
+				value: Object.keys(nextProps.hwUnits)[0]
 			};
 		}
 		return null;
 	}
-	state = { value: Object.keys(this.props.hwUnits)[0] };
+	state = {
+		value: Object.keys(this.props.hwUnits)[0],
+		openUnitMenu: false,
+		unitAnchorEl: null,
+		targetUnit: null
+	};
 
 	componentDidMount() {
 		const units = Object.keys(this.props.hwUnits);
@@ -74,12 +80,37 @@ class HWCourseUnitTabs extends Component {
 		this.props.toggleUnitID(value);
 	};
 
+	toggleUnitMenu = unit => e => {
+		e.preventDefault();
+		this.setState({
+			openUnitMenu: !this.state.openUnitMenu,
+			unitAnchorEl: this.state.unitAnchorEl === null ? e.currentTarget : null,
+			targetUnit: unit || null
+		});
+	};
+
+	closeUnitMenu = () => {
+		this.setState({
+			openUnitMenu: false,
+			unitAnchorEl: null,
+			targetUnit: null
+		});
+	};
+
 	render() {
 		const { hwUnits, classes } = this.props;
 		// if (!this.state.value) return null;
 
 		return (
 			<Grid container spocing={0} className={classes.root} justify="center">
+				{this.state.openUnitMenu ? (
+					<ListUnitMenu
+						open={this.state.openUnitMenu}
+						toggle={this.closeUnitMenu}
+						anchorEl={this.state.unitAnchorEl}
+						target={this.state.targetUnit}
+					/>
+				) : null}
 				<Grid item xs={11}>
 					<AppBar className={classes.unitBar} color="default">
 						<Grid container alignItems="center">
@@ -92,9 +123,11 @@ class HWCourseUnitTabs extends Component {
 								>
 									{Object.keys(hwUnits).map(item => (
 										<Tab
+											aria-owns={this.state.unitAnchorEl ? "unit_menu" : null}
 											label={hwUnits[item].unitTitle}
 											value={item}
 											key={item}
+											onContextMenu={this.toggleUnitMenu(item)}
 										/>
 									))}
 								</Tabs>
@@ -147,11 +180,11 @@ function mapStateToProps({ hwUnits, homeworks, hwStudents, studentHWStatus }) {
 		hwUnits,
 		homeworks,
 		hwStudents,
-		studentHWStatus,
+		studentHWStatus
 	};
 }
 
 export default compose(
 	withStyles(styles),
-	connect(mapStateToProps),
+	connect(mapStateToProps)
 )(HWCourseUnitTabs);

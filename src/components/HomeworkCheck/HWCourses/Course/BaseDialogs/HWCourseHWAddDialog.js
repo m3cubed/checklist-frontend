@@ -7,10 +7,11 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Grid from "@material-ui/core/Grid";
-import { handleAddHomework } from "../../../../actions/HomeworkCheck/homeworks";
+import { handleAddHomework } from "../../../../../actions/HomeworkCheck/homeworks";
 
 const styles = theme => ({
 	root: {
@@ -57,7 +58,7 @@ class HWCourseHWAddDialog extends Component {
 					<DialogTitle>Add a homework</DialogTitle>
 					<DialogContent>
 						<Grid container spacing={16} justify="center" alignItems="center">
-							<Grid item xs={6}>
+							<Grid item xs={12}>
 								<TextField
 									required
 									label="Title"
@@ -67,9 +68,17 @@ class HWCourseHWAddDialog extends Component {
 									fullWidth
 								/>
 							</Grid>
-							<Grid item xs={6}>
+							<Grid item xs={5}>
+								<hr />
+							</Grid>
+							<Grid item xs={2} align="center">
+								<DialogContentText>Optional</DialogContentText>
+							</Grid>
+							<Grid item xs={5}>
+								<hr />
+							</Grid>
+							<Grid item xs={12}>
 								<TextField
-									required
 									label="Submit Date"
 									id="submitDate"
 									type="date"

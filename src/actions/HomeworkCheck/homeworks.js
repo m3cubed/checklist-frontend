@@ -1,5 +1,6 @@
 import { CONNECTION } from "../../config/config";
 import { nameDuplicate } from "../../api";
+import { deleteStudentStatus } from "./studentHWStatus";
 
 export const LOAD_HOMEWORKS = "LOAD_HOMEWORKS";
 export const ADD_HOMEWORK = "ADD_HOMEWORK";
@@ -20,10 +21,10 @@ function addHomework(homework) {
 	};
 }
 
-function deleteHomework(homework) {
+function deleteHomework(id) {
 	return {
 		type: DELETE_HOMEWORK,
-		homework
+		id
 	};
 }
 
@@ -78,6 +79,26 @@ export function loadDefaultHomeworks(courseID, resolve, reject) {
 					resolve();
 				} else {
 					reject();
+				}
+			});
+	};
+}
+
+export function handleDeleteHomework(id) {
+	return dispatch => {
+		fetch(`${CONNECTION}/homeworks/delete`, {
+			method: "PUT",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({ id })
+		})
+			.then(res => res.json())
+			.then(json => {
+				if (json.completed) {
+					dispatch(deleteHomework(id));
+					dispatch(deleteStudentStatus(id));
 				}
 			});
 	};

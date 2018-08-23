@@ -20,10 +20,10 @@ function addHWUnit(unit) {
 	};
 }
 
-function deleteHWUnit(unit) {
+function deleteHWUnit(id) {
 	return {
 		type: DELETE_HW_UNIT,
-		unit
+		id
 	};
 }
 
@@ -70,6 +70,25 @@ export function loadDefaultHWUnits(courseID, resolve, reject) {
 			.then(json => {
 				dispatch(loadHWUnits(json.units));
 				resolve();
+			});
+	};
+}
+
+export function handleDeleteHWUnit(id) {
+	return dispatch => {
+		fetch(`${CONNECTION}/students/delete`, {
+			method: "PUT",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({ id })
+		})
+			.then(res => res.json())
+			.then(json => {
+				if (json.completed) {
+					dispatch(deleteHWUnit(id));
+				}
 			});
 	};
 }

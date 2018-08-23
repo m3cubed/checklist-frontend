@@ -19,13 +19,15 @@ export default function hwStudents(state = null, action) {
 		}
 		case DELETE_HW_STUDENT: {
 			return update(state, {
-				$unset: [action.student.id]
+				$unset: [action.id]
 			});
 		}
 		case UPDATE_HW_STUDENT: {
 			return {
 				...state,
-				[action.student.id]: action.student
+				[action.student.id]: {
+					...action.student
+				}
 			};
 		}
 		default:

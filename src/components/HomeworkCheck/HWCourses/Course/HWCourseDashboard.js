@@ -25,16 +25,18 @@ import {
 } from "../../../../actions/HomeworkCheck/hwStatus";
 import { loadingAPI } from "../../../../api";
 //Components
-import HWCourseStudentAddDialog from "./HWCourseStudentAddDialog";
-import HWCourseHWAddDialog from "./HWCourseHWAddDialog";
-import HWCourseUnitAddDialog from "./HWCourseUnitAddDialog";
+import HWCourseStudentAddDialog from "./BaseDialogs/HWCourseStudentAddDialog";
+import HWCourseHWAddDialog from "./BaseDialogs/HWCourseHWAddDialog";
+import HWCourseUnitAddDialog from "./BaseDialogs/HWCourseUnitAddDialog";
+import HWStatusAddDialog from "./Status/HWStatusAddDialog";
 import HWCourseUnitTabs from "./HWCourseUnitTabs";
 import HWStatusBar from "./Status/HWStatusBar";
+//Redux
 import { loadDefaultStudentStatus } from "../../../../actions/HomeworkCheck/studentHWStatus";
 import { changeNavbarTitle } from "../../../../actions/navbar";
 import { loadDefaultHWCourses } from "../../../../actions/HomeworkCheck/hwCourses";
 import { changeViewState } from "../../../../actions/PageStates/hwCheckCourse";
-import HWStatusAddDialog from "./Status/HWStatusAddDialog";
+import HWImportMain from "./Importing/HWImportMain";
 
 const styles = theme => ({
 	root: {
@@ -51,12 +53,14 @@ const HWCourseDashboard = props => {
 	const { dispatch } = props;
 	if (props.hwUnits === null || props.hwStudents === null) {
 		loadingAPI(dispatch, [
-			{ action: loadDefaultHWStudents, condition: id },
-			{ action: loadDefaultHWUnits, condition: id },
-			{ action: loadDefaultHWStatus, condition: id },
-			{ action: loadDefaultHomeworks, condition: id },
-			{ action: loadDefaultStudentStatus, condition: id },
-			{ action: loadDefaultHWCourses }
+			[
+				{ action: loadDefaultHWStudents, condition: id },
+				{ action: loadDefaultHWUnits, condition: id },
+				{ action: loadDefaultHWStatus, condition: id },
+				{ action: loadDefaultHomeworks, condition: id },
+				{ action: loadDefaultHWCourses }
+			],
+			[{ action: loadDefaultStudentStatus, condition: id }]
 		]);
 
 		return null;
@@ -177,6 +181,8 @@ class RenderDashBoard extends Component {
 					toggle={this.toggleStatusDialogClose}
 					courseID={id}
 				/>
+
+				<HWImportMain />
 
 				<Grid container spacing={0}>
 					<Grid item xs={12}>

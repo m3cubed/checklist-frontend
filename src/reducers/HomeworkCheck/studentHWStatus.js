@@ -20,7 +20,7 @@ export default function studentHWStatus(state = null, action) {
 		}
 		case DELETE_STUDENT_HW_STATUS: {
 			return update(state, {
-				$unset: [action.studentHWStatus.homeworkTitle]
+				$unset: [action.homeworkID]
 			});
 		}
 		case UPDATE_STUDENT_HW_STATUS: {

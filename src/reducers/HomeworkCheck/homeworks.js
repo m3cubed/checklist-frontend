@@ -19,7 +19,7 @@ export default function homeworks(state = null, action) {
 		}
 		case DELETE_HOMEWORK: {
 			return update(state, {
-				$unset: [action.homework.id]
+				$unset: [action.id]
 			});
 		}
 		case UPDATE_HOMEWORK: {
