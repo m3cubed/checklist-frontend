@@ -14,6 +14,7 @@ const HWImportMain = props => {
 			<HWImportStudents
 				open={props.hwCheckCourse.imports.students}
 				toggle={toggleImport}
+				courseID={props.courseID}
 			/>
 		</React.Fragment>
 	);

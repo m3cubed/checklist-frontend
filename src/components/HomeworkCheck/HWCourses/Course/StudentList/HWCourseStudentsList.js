@@ -520,8 +520,10 @@ class HWCourseStudentsList extends Component {
 		e.preventDefault();
 		if (status === "Complete") {
 			this.props.dispatch(updateStudentStatus(homework, student, "Incomplete"));
-		} else {
+		} else if (status === "") {
 			this.props.dispatch(updateStudentStatus(homework, student, "Complete"));
+		} else {
+			this.props.dispatch(updateStudentStatus(homework, student, ""));
 		}
 	};
 

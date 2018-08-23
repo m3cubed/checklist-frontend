@@ -182,7 +182,7 @@ class RenderDashBoard extends Component {
 					courseID={id}
 				/>
 
-				<HWImportMain />
+				<HWImportMain courseID={id} />
 
 				<Grid container spacing={0}>
 					<Grid item xs={12}>

@@ -98,12 +98,6 @@ class HWCourseSideDrawer extends Component {
 							<ListItemText>Students</ListItemText>
 						</ListItem>
 					</List>
-					<Divider />
-					<List>
-						<ListItem button className={classes.nestedList}>
-							<ListItemText>Homeworks</ListItemText>
-						</ListItem>
-					</List>
 				</Collapse>
 				<Divider />
 			</Fragment>
