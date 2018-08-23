@@ -74,7 +74,6 @@ class HWImportStudents extends Component {
 
 	handleSubmit = () => {
 		if (this.state.grid !== null) {
-			console.log(1);
 			this.props.dispatch(
 				handleSubmitMultipleStudents(this.state.grid, this.props.courseID)
 			);

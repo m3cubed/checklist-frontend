@@ -109,7 +109,6 @@ export function handleUpdateHWStudent(student) {
 }
 
 export function handleSubmitMultipleStudents(students, courseID) {
-	console.log(2);
 	return dispatch => {
 		fetch(`${CONNECTION}/students/insert_many`, {
 			method: "POST",

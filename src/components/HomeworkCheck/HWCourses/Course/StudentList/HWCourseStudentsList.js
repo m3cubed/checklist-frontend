@@ -358,7 +358,7 @@ class HWCourseStudentsList extends Component {
 				}}
 				justify="center"
 				alignItems="center"
-				onClick={this.toggleStudentEdit([
+				onDoubleClick={this.toggleStudentEdit([
 					student[2],
 					columnIndex,
 					student[columnIndex]
@@ -440,34 +440,45 @@ class HWCourseStudentsList extends Component {
 		});
 	};
 
-	toggleStudentEdit = (target, value) => () => {
+	toggleStudentEdit = target => () => {
 		this.setState({
-			studentEdit: target,
-			tempEdit: value
+			studentEdit: target
 		});
 	};
 
 	handleStudentUpdate = () => {
 		const { studentEdit } = this.state;
-		let student = { id: studentEdit[0] };
+		const original = this.props.hwStudents[studentEdit[0]];
+		try {
+			if (
+				studentEdit[2] !== original.firstName &&
+				studentEdit[2] !== original.lastName
+			) {
+				let student = { id: studentEdit[0] };
 
-		console.log(1);
-		switch (studentEdit[1]) {
-			case 0: {
-				student.firstName = studentEdit[2];
-				break;
+				switch (studentEdit[1]) {
+					case 0: {
+						student.firstName = studentEdit[2];
+						break;
+					}
+					case 1: {
+						student.lastName = studentEdit[2];
+						break;
+					}
+					default:
+						null;
+				}
+				this.props.dispatch(handleUpdateHWStudent(student));
 			}
-			case 1: {
-				student.lastName = studentEdit[2];
-				break;
-			}
-			default:
-				null;
+		} catch (err) {
+			console.log(err);
+		} finally {
+			setTimeout(() => {
+				this.setState({
+					studentEdit: null
+				});
+			}, 200);
 		}
-		this.setState({
-			studentEdit: null
-		});
-		this.props.dispatch(handleUpdateHWStudent(student));
 	};
 
 	toggleHWMenu = homework => e => {

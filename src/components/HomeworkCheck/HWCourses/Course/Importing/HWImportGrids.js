@@ -76,7 +76,7 @@ class HWImportGrids extends Component {
 
 	render() {
 		const { classes } = this.props;
-		console.log(this.state.grid);
+
 		return (
 			<React.Fragment>
 				<Grid container spacing={0} justify="center">
