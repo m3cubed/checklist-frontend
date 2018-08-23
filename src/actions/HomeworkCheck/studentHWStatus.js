@@ -69,15 +69,18 @@ export function loadDefaultStudentStatus(courseID, resolve, reject) {
 	return (dispatch, getState) => {
 		const { homeworks } = getState();
 		let studentHWStatus = getState().studentHWStatus;
-
-		const temp = Object.keys(studentHWStatus).reduce((acc, cv) => {
-			if (Object.keys(homeworks).includes(cv)) {
-				acc[cv] = studentHWStatus[cv];
-			}
-			return acc;
-		}, {});
-
-		studentHWStatus = temp;
+		let temp;
+		try {
+			temp = Object.keys(studentHWStatus).reduce((acc, cv) => {
+				if (Object.keys(homeworks).includes(cv)) {
+					acc[cv] = studentHWStatus[cv];
+				}
+				return acc;
+			}, {});
+			studentHWStatus = temp;
+		} catch (err) {
+			console.log(err);
+		}
 
 		fetch(`${CONNECTION}/student_homework_status/retrieve`, {
 			method: "PUT",
