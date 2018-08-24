@@ -658,6 +658,7 @@ class HWCourseStudentsList extends Component {
 														overscanColumnCount={7}
 														overscanRowCount={7}
 														scrollLeft={scrollLeft}
+														containerStyle={{ pointerEvents: "auto" }}
 													/>
 												)}
 											</AutoSizer>
@@ -691,6 +692,7 @@ class HWCourseStudentsList extends Component {
 														overscanColumnCount={7}
 														overscanRowCount={7}
 														scrollTop={scrollTop}
+														containerStyle={{ pointerEvents: "auto" }}
 													/>
 												)}
 											</AutoSizer>
@@ -719,6 +721,7 @@ class HWCourseStudentsList extends Component {
 														overscanRowCount={7}
 														onScroll={onScroll}
 														scrollTop={scrollTop}
+														containerStyle={{ pointerEvents: "auto" }}
 													/>
 												)}
 											</AutoSizer>
