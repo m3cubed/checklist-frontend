@@ -7,7 +7,7 @@ import { GoogleLogin, GoogleLogout } from "react-google-login";
 import { SHA256 } from "crypto-js";
 //Accessories
 import Grid from "@material-ui/core/Grid";
-
+//Components
 import StandardLoginForm from "./StandardLoginForm";
 
 const styles = theme => ({
@@ -51,6 +51,7 @@ class AuthForm extends Component {
 		this.toggleGoogleRegisterDialog = this.toggleGoogleRegisterDialog.bind(
 			this
 		);
+		this.handleLoginIn = this.handleLoginIn.bind(this);
 	}
 
 	toggleGoogleRegisterDialog = () => {
@@ -65,6 +66,38 @@ class AuthForm extends Component {
 		}
 		return true;
 	}
+
+	handleLoginIn = state => e => {
+		e.preventDefault();
+		const { send, register } = state;
+		const { dispatch } = this.props;
+
+		switch (register) {
+			case true: {
+				const { email, password, familyName, givenName } = send;
+				this.props.auth.signup(
+					email,
+					password,
+					dispatch,
+					() => this.props.history.push("/"),
+					givenName,
+					familyName,
+					email === process.env.REACT_APP_ADMIN ? "admin" : "teacher"
+				);
+				break;
+			}
+			case false: {
+				const { email, password } = send;
+				this.props.auth.login(email, password, dispatch, () =>
+					this.props.history.push("/")
+				);
+
+				break;
+			}
+			default:
+				null;
+		}
+	};
 
 	responseGoogle = (type, cb) => response => {
 		const { dispatch } = this.props;
@@ -96,14 +129,14 @@ class AuthForm extends Component {
 
 	render() {
 		const { classes } = this.props;
-		const { from } = this.props.location
-			? this.props.location.state
-			: { from: { pathname: "/" } };
-		const { redirectToReferrer } = this.state;
+		// const { from } = this.props.location
+		// 	? this.props.location.state
+		// 	: { from: { pathname: "/" } };
+		// const { redirectToReferrer } = this.state;
 
-		if (redirectToReferrer) {
-			return <Redirect to={from} />;
-		}
+		// if (redirectToReferrer) {
+		// 	return <Redirect to={from} />;
+		// }
 
 		return (
 			<Grid
@@ -113,7 +146,7 @@ class AuthForm extends Component {
 				style={{ height: 600 }}
 				direction="column"
 			>
-				<StandardLoginForm />
+				<StandardLoginForm handleSubmit={this.handleLoginIn} />
 				<Grid item xs={2} align="center">
 					<GoogleLogin
 						clientId={clientID}
