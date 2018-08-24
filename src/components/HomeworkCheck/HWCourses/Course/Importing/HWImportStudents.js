@@ -78,6 +78,7 @@ class HWImportStudents extends Component {
 				handleSubmitMultipleStudents(this.state.grid, this.props.courseID)
 			);
 		}
+		this.props.toggle("students");
 	};
 
 	render() {

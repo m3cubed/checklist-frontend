@@ -631,14 +631,13 @@ class HWCourseStudentsList extends Component {
 											</AutoSizer>
 										</Paper>
 									</Grid>
-									<Grid item xs={7} md={10} style={{ pointerEvents: "auto" }}>
+									<Grid item xs={7} md={10}>
 										<Paper
 											style={{
 												height: 40,
 												zIndex: 3,
 												boxShadow: "none",
-												borderRadius: "none",
-												pointerEvents: "auto"
+												borderRadius: "none"
 											}}
 										>
 											<AutoSizer>
@@ -659,21 +658,23 @@ class HWCourseStudentsList extends Component {
 														overscanColumnCount={7}
 														overscanRowCount={7}
 														scrollLeft={scrollLeft}
-														containerStyle={{ pointerEvents: "auto" }}
+														containerStyle={{
+															pointerEvents: "auto",
+															overflow: "hidden hidden"
+														}}
 													/>
 												)}
 											</AutoSizer>
 										</Paper>
 									</Grid>
-									<Grid item xs={5} md={2} style={{ pointerEvents: "auto" }}>
+									<Grid item xs={5} md={2}>
 										<Paper
 											style={{
 												height: height - scrollbarSize(),
 												zIndex: 2,
 												borderRadius: 0,
 												boxShadow:
-													"5px 0px 5px -5px rgba(0, 0, 0, 0.2),10px 0px 20px -3px rgba(0, 0, 0, 0.14)",
-												pointerEvents: "auto"
+													"5px 0px 5px -5px rgba(0, 0, 0, 0.2),10px 0px 20px -3px rgba(0, 0, 0, 0.14)"
 											}}
 										>
 											<AutoSizer>
@@ -694,14 +695,17 @@ class HWCourseStudentsList extends Component {
 														overscanColumnCount={7}
 														overscanRowCount={7}
 														scrollTop={scrollTop}
-														containerStyle={{ pointerEvents: "auto" }}
+														containerStyle={{
+															pointerEvents: "auto",
+															overflow: "hidden hidden"
+														}}
 													/>
 												)}
 											</AutoSizer>
 										</Paper>
 									</Grid>
-									<Grid item xs={7} md={10} style={{ pointerEvents: "auto" }}>
-										<div style={{ height: height, pointerEvents: "auto" }}>
+									<Grid item xs={7} md={10}>
+										<div style={{ height: height }}>
 											<AutoSizer>
 												{({ height, width }) => (
 													<VGrid
