@@ -133,7 +133,7 @@ export function saveAllStatus(courseID) {
 		const statusList = studentHWStatus;
 
 		fetch(`${CONNECTION}/student_homework_status/upsert`, {
-			method: "PUT",
+			method: "POST",
 			credentials: "include",
 			headers: {
 				"Content-Type": "application/json"
