@@ -16,6 +16,7 @@ import Papa from "papaparse";
 //Components
 import HWImportGrids from "./HWImportGrids";
 import { handleSubmitMultipleStudents } from "../../../../../actions/HomeworkCheck/hwStudents";
+import { toggleShowImport } from "../../../../../actions/PageStates/hwCheckCourse";
 
 const styles = theme => ({
 	gridCells: {
@@ -78,7 +79,7 @@ class HWImportStudents extends Component {
 				handleSubmitMultipleStudents(this.state.grid, this.props.courseID)
 			);
 		}
-		this.props.toggle("students");
+		this.props.dispatch(toggleShowImport("students"));
 	};
 
 	render() {
