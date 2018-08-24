@@ -631,13 +631,14 @@ class HWCourseStudentsList extends Component {
 											</AutoSizer>
 										</Paper>
 									</Grid>
-									<Grid item xs={7} md={10}>
+									<Grid item xs={7} md={10} style={{ pointerEvents: "auto" }}>
 										<Paper
 											style={{
 												height: 40,
 												zIndex: 3,
 												boxShadow: "none",
-												borderRadius: "none"
+												borderRadius: "none",
+												pointerEvents: "auto"
 											}}
 										>
 											<AutoSizer>
@@ -664,14 +665,15 @@ class HWCourseStudentsList extends Component {
 											</AutoSizer>
 										</Paper>
 									</Grid>
-									<Grid item xs={5} md={2}>
+									<Grid item xs={5} md={2} style={{ pointerEvents: "auto" }}>
 										<Paper
 											style={{
 												height: height - scrollbarSize(),
 												zIndex: 2,
 												borderRadius: 0,
 												boxShadow:
-													"5px 0px 5px -5px rgba(0, 0, 0, 0.2),10px 0px 20px -3px rgba(0, 0, 0, 0.14)"
+													"5px 0px 5px -5px rgba(0, 0, 0, 0.2),10px 0px 20px -3px rgba(0, 0, 0, 0.14)",
+												pointerEvents: "auto"
 											}}
 										>
 											<AutoSizer>
@@ -698,8 +700,8 @@ class HWCourseStudentsList extends Component {
 											</AutoSizer>
 										</Paper>
 									</Grid>
-									<Grid item xs={7} md={10}>
-										<div style={{ height: height }}>
+									<Grid item xs={7} md={10} style={{ pointerEvents: "auto" }}>
+										<div style={{ height: height, pointerEvents: "auto" }}>
 											<AutoSizer>
 												{({ height, width }) => (
 													<VGrid
