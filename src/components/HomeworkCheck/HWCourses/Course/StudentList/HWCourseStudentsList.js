@@ -529,12 +529,12 @@ class HWCourseStudentsList extends Component {
 
 	toggleStudentCellClick = (homework, student, status) => e => {
 		e.preventDefault();
-		if (status === "Complete") {
-			this.props.dispatch(updateStudentStatus(homework, student, "Incomplete"));
-		} else if (status === "") {
-			this.props.dispatch(updateStudentStatus(homework, student, "Complete"));
-		} else {
+		if (status === "Incomplete") {
 			this.props.dispatch(updateStudentStatus(homework, student, ""));
+		} else if (status === "Complete") {
+			this.props.dispatch(updateStudentStatus(homework, student, "Incomplete"));
+		} else {
+			this.props.dispatch(updateStudentStatus(homework, student, "Complete"));
 		}
 	};
 

@@ -146,7 +146,7 @@ class AuthForm extends Component {
 				style={{ height: 600 }}
 				direction="column"
 			>
-				<StandardLoginForm handleSubmit={this.handleLoginIn} />
+				{/*<StandardLoginForm handleSubmit={this.handleLoginIn} />*/}
 				<Grid item xs={2} align="center">
 					<GoogleLogin
 						clientId={clientID}
