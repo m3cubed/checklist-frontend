@@ -37,7 +37,8 @@ const store = createStore(reducer, persistedState, middleware);
 store.subscribe(
 	throttle(() => {
 		saveState({
-			studentHWStatus: store.getState().studentHWStatus
+			studentHWStatus: store.getState().studentHWStatus,
+			seatingPositions: store.getState().seatingPositions
 		});
 	}, 1000)
 );

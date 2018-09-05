@@ -16,6 +16,7 @@ import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 //Components
 import HWCourseStudentsList from "./StudentList/HWCourseStudentsList";
 import ListUnitMenu from "./Menus/ListUnitMenu";
+import SeatingViewDashboard from "./SeatingView/SeatingViewDashboard";
 
 const styles = theme => ({
 	root: {
@@ -66,13 +67,28 @@ class HWCourseUnitTabs extends Component {
 	}
 
 	mountTable(unitID) {
-		return (
-			<HWCourseStudentsList
-				unitID={unitID}
-				courseID={this.props.courseID}
-				toggleAddHW={this.props.toggleHWDialogOpen}
-			/>
-		);
+		switch (this.props.view) {
+			case "Table View": {
+				return (
+					<HWCourseStudentsList
+						unitID={unitID}
+						courseID={this.props.courseID}
+						toggleAddHW={this.props.toggleHWDialogOpen}
+					/>
+				);
+			}
+			case "Seating View": {
+				return (
+					<SeatingViewDashboard
+						unitID={unitID}
+						courseID={this.props.courseID}
+						toggleAddHW={this.props.toggleHWDialogOpen}
+					/>
+				);
+			}
+			default:
+				return null;
+		}
 	}
 
 	handleTabValue = (e, value) => {
@@ -175,12 +191,19 @@ class HWCourseUnitTabs extends Component {
 	}
 }
 
-function mapStateToProps({ hwUnits, homeworks, hwStudents, studentHWStatus }) {
+function mapStateToProps({
+	hwUnits,
+	homeworks,
+	hwStudents,
+	studentHWStatus,
+	hwCheckCourse
+}) {
 	return {
 		hwUnits,
 		homeworks,
 		hwStudents,
-		studentHWStatus
+		studentHWStatus,
+		view: hwCheckCourse.view
 	};
 }
 

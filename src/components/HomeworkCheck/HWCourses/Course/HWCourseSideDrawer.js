@@ -76,7 +76,7 @@ class HWCourseSideDrawer extends Component {
 							<ListItem
 								button
 								className={classes.nestedList}
-								// onClick={this.handleViewChange("Seating View")}
+								onClick={this.handleViewChange("Seating View")}
 							>
 								<ListItemText>Seating View</ListItemText>
 							</ListItem>

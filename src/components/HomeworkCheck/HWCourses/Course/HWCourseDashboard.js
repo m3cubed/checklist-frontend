@@ -37,6 +37,7 @@ import { changeNavbarTitle } from "../../../../actions/navbar";
 import { loadDefaultHWCourses } from "../../../../actions/HomeworkCheck/hwCourses";
 import { changeViewState } from "../../../../actions/PageStates/hwCheckCourse";
 import HWImportMain from "./Importing/HWImportMain";
+import { loadDefaultSeatingPositions } from "../../../../actions/HomeworkCheck/seatingPositions";
 
 const styles = theme => ({
 	root: {
@@ -60,7 +61,10 @@ const HWCourseDashboard = props => {
 				{ action: loadDefaultHomeworks, condition: id },
 				{ action: loadDefaultHWCourses }
 			],
-			[{ action: loadDefaultStudentStatus, condition: id }]
+			[
+				{ action: loadDefaultStudentStatus, condition: id },
+				{ action: loadDefaultSeatingPositions, condition: id }
+			]
 		]);
 
 		return null;
@@ -101,51 +105,17 @@ class RenderDashBoard extends Component {
 		this.setState({ unitID });
 	};
 
-	toggleStudentDialogOpen = () => {
+	toggleDialogOpen = type => () => {
+		const target = `${type}Dialog`;
 		this.setState({
-			studentDialog: true
+			[target]: true
 		});
 	};
 
-	toggleHWDialogOpen = () => {
+	toggleDialogClose = type => () => {
+		const target = type + "Dialog";
 		this.setState({
-			hwDialog: true
-		});
-	};
-
-	toggleUnitDialogOpen = () => {
-		this.setState({
-			unitDialog: true
-		});
-	};
-
-	toggleStatusDialogOpen = () => {
-		this.setState({
-			statusDialog: true
-		});
-	};
-
-	toggleStudentDialogClose = () => {
-		this.setState({
-			studentDialog: false
-		});
-	};
-
-	toggleHWDialogClose = () => {
-		this.setState({
-			hwDialog: false
-		});
-	};
-
-	toggleUnitDialogClose = () => {
-		this.setState({
-			unitDialog: false
-		});
-	};
-
-	toggleStatusDialogClose = () => {
-		this.setState({
-			statusDialog: false
+			[target]: false
 		});
 	};
 
@@ -158,27 +128,27 @@ class RenderDashBoard extends Component {
 				{this.state.studentDialog ? (
 					<HWCourseStudentAddDialog
 						open={this.state.studentDialog}
-						toggle={this.toggleStudentDialogClose}
+						toggle={this.toggleDialogClose}
 						courseID={id}
 					/>
 				) : null}
 
 				<HWCourseHWAddDialog
 					open={this.state.hwDialog}
-					toggle={this.toggleHWDialogClose}
+					toggle={this.toggleDialogClose}
 					courseID={id}
 					unitID={this.state.unitID}
 				/>
 
 				<HWCourseUnitAddDialog
 					open={this.state.unitDialog}
-					toggle={this.toggleUnitDialogClose}
+					toggle={this.toggleDialogClose}
 					courseID={id}
 				/>
 
 				<HWStatusAddDialog
 					open={this.state.statusDialog}
-					toggle={this.toggleStatusDialogClose}
+					toggle={this.toggleDialogClose}
 					courseID={id}
 				/>
 
@@ -186,25 +156,26 @@ class RenderDashBoard extends Component {
 
 				<Grid container spacing={0}>
 					<Grid item xs={12}>
-						<HWStatusBar add={this.toggleStatusDialogOpen} />
+						<HWStatusBar add={this.toggleDialogOpen("status")} />
 					</Grid>
 					<Grid item xs={12} style={{ height: 700 }}>
 						<HWCourseUnitTabs
-							toggleHWDialogOpen={this.toggleHWDialogOpen}
-							toggleHWDialongClose={this.toggleHWDialogClose}
-							toggleUnitDialogOpen={this.toggleUnitDialogOpen}
+							toggleHWDialogOpen={this.toggleDialogOpen("hw")}
+							toggleUnitDialogOpen={this.toggleDialogOpen("unit")}
 							toggleUnitID={this.toggleUnitID}
 							courseID={id}
 						/>
 					</Grid>
 				</Grid>
-				<Button onClick={this.toggleStudentDialogOpen}>Add a Student</Button>
+				<Button onClick={this.toggleDialogOpen("student")}>
+					Add a Student
+				</Button>
 			</Paper>
 		);
 	}
 }
 
-function mapStateToProps({ hwUnits, hwStudents, hwCourses }, { match }) {
+function mapStateToProps({ hwUnits, hwStudents, hwCourses }) {
 	return {
 		hwUnits,
 		hwStudents,

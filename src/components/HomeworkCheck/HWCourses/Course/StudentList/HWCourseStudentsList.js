@@ -227,6 +227,9 @@ class HWCourseStudentsList extends Component {
 		this._renderHWHeaderCell = this._renderHWHeaderCell.bind(this);
 		this._renderStudentColumnCell = this._renderStudentColumnCell.bind(this);
 		this._renderStudentBodyCell = this._renderStudentBodyCell.bind(this);
+
+		this.handleTouchStart = this.handleTouchStart.bind(this);
+		this.handleTouchEnd = this.handleTouchEnd.bind(this);
 	}
 
 	_renderHWHeaderCell({ columnIndex, key, rowIndex, style }) {
@@ -409,6 +412,11 @@ class HWCourseStudentsList extends Component {
 					aria-owns={this.state.statusAnchorEl ? "status_body_menu" : null}
 					onClick={this.toggleStudentCellClick(whichHW, whichStudent, status)}
 					onContextMenu={this.toggleStatusMenu(whichHW, whichStudent)}
+					onTouchStart={this.handleTouchStart("status", {
+						homework: whichHW,
+						student: whichStudent
+					})}
+					onTouchEnd={this.handleTouchEnd}
 					justify="center"
 					alignItems="center"
 				>
@@ -525,6 +533,33 @@ class HWCourseStudentsList extends Component {
 				this.state.statusAnchorEl === null ? e.currentTarget : null,
 			target: [homework, student] || null
 		});
+	};
+
+	handleTouchStart = (type, criterias) => e => {
+		switch (type) {
+			case "status": {
+				const { homework, student } = criterias;
+				this.touchPress = setTimeout(
+					() =>
+						this.setState({
+							openStatusMenu: !this.state.openStatusMenu,
+							statusAnchorEl:
+								this.state.statusAnchorEl === null ? e.currentTarget : null,
+							target: [homework, student] || null
+						}),
+					800
+				);
+				break;
+			}
+			default:
+				return null;
+		}
+	};
+
+	handleTouchEnd = () => {
+		try {
+			clearTimeout(this.touchPress);
+		} catch (err) {}
 	};
 
 	toggleStudentCellClick = (homework, student, status) => e => {

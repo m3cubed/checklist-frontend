@@ -23,6 +23,8 @@ const styles = theme => ({
 });
 
 class HWCourseHWAddDialog extends Component {
+	close = this.props.toggle("hw");
+
 	state = {
 		unitID: this.props.unitID,
 		homeworkTitle: "",
@@ -46,14 +48,14 @@ class HWCourseHWAddDialog extends Component {
 
 	handleSubmit = e => {
 		e.preventDefault();
-		this.props.toggle();
+		this.close();
 		this.props.dispatch(handleAddHomework(this.state));
 	};
 
 	render() {
 		const { classes } = this.props;
 		return (
-			<Dialog open={this.props.open} onClose={this.props.toggle}>
+			<Dialog open={this.props.open} onClose={this.close}>
 				<form onSubmit={this.handleSubmit}>
 					<DialogTitle>Add a homework</DialogTitle>
 					<DialogContent>
@@ -93,7 +95,7 @@ class HWCourseHWAddDialog extends Component {
 						</Grid>
 					</DialogContent>
 					<DialogActions>
-						<Button onClick={this.props.toggle}>Cancel</Button>
+						<Button onClick={this.close}>Cancel</Button>
 						<Button color="primary">Add+</Button>
 						<Button color="primary" type="submit">
 							Add

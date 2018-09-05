@@ -79,6 +79,8 @@ const RenderColorRows = props => {
 };
 
 class HWCourseStatusAddDialog extends Component {
+	close = this.props.toggle("status");
+
 	state = {
 		statusTitle: "",
 		statusDescription: "",
@@ -101,12 +103,12 @@ class HWCourseStatusAddDialog extends Component {
 
 	handleSubmit = e => {
 		e.preventDefault();
-		this.props.toggle();
 		if (this.state.color === "") {
 			alert("You must select a color!");
 		} else {
 			this.props.dispatch(handleAddHWStatus(this.state));
 		}
+		this.close();
 	};
 
 	handleColor = color => () => {
@@ -120,7 +122,7 @@ class HWCourseStatusAddDialog extends Component {
 		return (
 			<Dialog
 				open={this.props.open}
-				onClose={this.props.toggle}
+				onClose={this.close}
 				className={classes.root}
 			>
 				<form onSubmit={this.handleSubmit}>
@@ -185,7 +187,7 @@ class HWCourseStatusAddDialog extends Component {
 						</div>
 					</DialogContent>
 					<DialogActions>
-						<Button onClick={this.props.toggle}>Cancel</Button>
+						<Button onClick={this.close}>Cancel</Button>
 						<Button color="primary">Add+</Button>
 						<Button color="primary" type="submit">
 							Add

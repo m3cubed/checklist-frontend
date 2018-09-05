@@ -4,6 +4,7 @@ import homeworks from "./homeworks";
 import hwUnits from "./hwUnits";
 import hwStatus from "./hwStatus";
 import studentHWStatus from "./studentHWStatus";
+import seatingPositions from "./seatingPositions";
 
 export const homeworkCheck = {
 	hwCourses,
@@ -11,5 +12,6 @@ export const homeworkCheck = {
 	homeworks,
 	hwUnits,
 	hwStatus,
-	studentHWStatus
+	studentHWStatus,
+	seatingPositions
 };
