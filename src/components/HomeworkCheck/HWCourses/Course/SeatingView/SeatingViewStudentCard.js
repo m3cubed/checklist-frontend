@@ -99,6 +99,7 @@ const SeatingViewStudentCard = props => {
 			<Paper
 				style={{ height, width, backgroundColor: color }}
 				onClick={handleCardClick}
+				onContextMenu={props.onContextMenu}
 			>
 				{connectDragSource(<div className={props.classes.grabDiv} />)}
 

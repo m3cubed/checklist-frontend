@@ -229,6 +229,7 @@ class HWCourseStudentsList extends Component {
 		this._renderStudentBodyCell = this._renderStudentBodyCell.bind(this);
 
 		this.handleMouseDownPress = this.handleMouseDownPress.bind(this);
+		this.toggleStudentCellClick = this.toggleStudentCellClick.bind(this);
 	}
 
 	_renderHWHeaderCell({ columnIndex, key, rowIndex, style }) {
@@ -411,11 +412,11 @@ class HWCourseStudentsList extends Component {
 					aria-owns={this.state.statusAnchorEl ? "status_body_menu" : null}
 					onClick={this.toggleStudentCellClick(whichHW, whichStudent, status)}
 					onContextMenu={this.toggleStatusMenu(whichHW, whichStudent)}
-					onMouseDown={this.handleMouseDownPress("status", {
+					onTouchStart={this.handleMouseDownPress("status", {
 						homework: whichHW,
 						student: whichStudent
 					})}
-					onMouseUp={this.handleMouseRelease}
+					onTouchEnd={this.handleMouseRelease}
 					justify="center"
 					alignItems="center"
 				>
@@ -536,6 +537,8 @@ class HWCourseStudentsList extends Component {
 
 	toggleStudentCellClick = (homework, student, status) => e => {
 		e.preventDefault();
+		const target = e.currentTarget;
+
 		if (status === "Incomplete") {
 			this.props.dispatch(updateStudentStatus(homework, student, ""));
 		} else if (status === "Complete") {
@@ -559,7 +562,7 @@ class HWCourseStudentsList extends Component {
 								this.state.statusAnchorEl === null ? target : null,
 							target: [homework, student] || null
 						}),
-					800
+					250
 				);
 				break;
 			}

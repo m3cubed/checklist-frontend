@@ -37,7 +37,7 @@ class SeatingViewDashboard extends Component {
 						<SeatingViewHWList />
 					</Grid>
 					<Grid item xs={10}>
-						<div style={{ width: "100%" }}>
+						<div>
 							<AutoSizer>
 								{({ width }) => (
 									<SeatingViewDropContainer

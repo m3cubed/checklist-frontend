@@ -15,6 +15,8 @@ import {
 	updatePosition,
 	savePositions
 } from "../../../../../actions/HomeworkCheck/seatingPositions";
+import ListStatusMenu from "../Menus/ListStatusMenu";
+import { updateStudentStatus } from "../../../../../actions/HomeworkCheck/studentHWStatus";
 
 const styles = theme => ({
 	root: {
@@ -58,7 +60,16 @@ const gridTarget = {
 };
 
 class SeatingViewContainer extends Component {
-	state = {};
+	constructor(props) {
+		super(props);
+		this.state = {
+			openStatusMenu: false,
+			statusAnchorEl: null,
+			target: null
+		};
+
+		this.changeStudentStatus = this.changeStudentStatus.bind(this);
+	}
 
 	moveGrids(newPosition) {
 		this.props.dispatch(updatePosition(newPosition));
@@ -73,52 +84,91 @@ class SeatingViewContainer extends Component {
 		}
 	}
 
+	toggleStatusMenu = (homework, student) => e => {
+		e.preventDefault();
+		if (homework !== "") {
+			this.setState({
+				openStatusMenu: !this.state.openStatusMenu,
+				statusAnchorEl:
+					this.state.statusAnchorEl === null ? e.currentTarget : null,
+				target: [homework, student] || null
+			});
+		}
+	};
+
+	changeStudentStatus(status) {
+		this.props.dispatch(
+			updateStudentStatus(this.state.target[0], this.state.target[1], status)
+		);
+		this.setState({
+			openStatusMenu: !this.state.openStatusMenu,
+			statusAnchorEl: null,
+			target: null
+		});
+	}
+
 	render() {
 		const {
 			connectDropTarget,
 			students,
 			seatingPositions,
-			maxWidth
+			maxWidth,
+			homeworkID
 		} = this.props;
-		return connectDropTarget(
-			<div style={{ width: maxWidth }}>
-				<div
-					style={{
-						height: 500,
-						border: "3px solid #8D6E63",
-						position: "relative",
-						backgroundColor: "#D7CCC8"
-					}}
-				>
-					{Object.keys(seatingPositions).length > 0
-						? Object.keys(seatingPositions).map(student => {
-								if (students[student]) {
-									const { firstName, lastName, gender } = students[student];
-									return (
-										<SeatingViewStudentCard
-											key={student}
-											{...seatingPositions[student]}
-											id={student}
-											firstName={firstName}
-											lastName={lastName}
-											gender={gender}
-											location="container"
-										/>
-									);
-								}
-						  })
-						: null}
-				</div>
-				<SeatingViewStudentHanger />
-			</div>
+		return (
+			<React.Fragment>
+				<ListStatusMenu
+					open={this.state.openStatusMenu}
+					toggle={this.toggleStatusMenu}
+					anchorEl={this.state.statusAnchorEl}
+					change={this.changeStudentStatus}
+				/>
+				{connectDropTarget(
+					<div style={{ width: maxWidth }}>
+						<div
+							style={{
+								height: 500,
+								border: "3px solid #8D6E63",
+								position: "relative",
+								backgroundColor: "#D7CCC8"
+							}}
+						>
+							{Object.keys(seatingPositions).length > 0
+								? Object.keys(seatingPositions).map(student => {
+										if (students[student]) {
+											const { firstName, lastName, gender } = students[student];
+											return (
+												<SeatingViewStudentCard
+													key={student}
+													{...seatingPositions[student]}
+													id={student}
+													firstName={firstName}
+													lastName={lastName}
+													gender={gender}
+													location="container"
+													onContextMenu={this.toggleStatusMenu(
+														homeworkID,
+														student
+													)}
+												/>
+											);
+										}
+								  })
+								: null}
+						</div>
+						<SeatingViewStudentHanger />
+					</div>
+				)}
+			</React.Fragment>
 		);
 	}
 }
 
-function mapStateToProps({ hwStudents, seatingPositions }) {
+function mapStateToProps({ hwStudents, seatingPositions, hwCheckCourse }) {
 	return {
 		hwStudents,
-		seatingPositions
+		seatingPositions,
+		homeworkID: hwCheckCourse.seatingHomework
 	};
 }
 
