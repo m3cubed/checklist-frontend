@@ -228,8 +228,7 @@ class HWCourseStudentsList extends Component {
 		this._renderStudentColumnCell = this._renderStudentColumnCell.bind(this);
 		this._renderStudentBodyCell = this._renderStudentBodyCell.bind(this);
 
-		this.handleTouchStart = this.handleTouchStart.bind(this);
-		this.handleTouchEnd = this.handleTouchEnd.bind(this);
+		this.handleMouseDownPress = this.handleMouseDownPress.bind(this);
 	}
 
 	_renderHWHeaderCell({ columnIndex, key, rowIndex, style }) {
@@ -412,11 +411,11 @@ class HWCourseStudentsList extends Component {
 					aria-owns={this.state.statusAnchorEl ? "status_body_menu" : null}
 					onClick={this.toggleStudentCellClick(whichHW, whichStudent, status)}
 					onContextMenu={this.toggleStatusMenu(whichHW, whichStudent)}
-					onTouchStart={this.handleTouchStart("status", {
+					onMouseDown={this.handleMouseDownPress("status", {
 						homework: whichHW,
 						student: whichStudent
 					})}
-					onTouchEnd={this.handleTouchEnd}
+					onMouseUp={this.handleMouseRelease}
 					justify="center"
 					alignItems="center"
 				>
@@ -535,16 +534,29 @@ class HWCourseStudentsList extends Component {
 		});
 	};
 
-	handleTouchStart = (type, criterias) => e => {
+	toggleStudentCellClick = (homework, student, status) => e => {
+		e.preventDefault();
+		if (status === "Incomplete") {
+			this.props.dispatch(updateStudentStatus(homework, student, ""));
+		} else if (status === "Complete") {
+			this.props.dispatch(updateStudentStatus(homework, student, "Incomplete"));
+		} else {
+			this.props.dispatch(updateStudentStatus(homework, student, "Complete"));
+		}
+	};
+
+	handleMouseDownPress = (type, criteria) => e => {
+		e.preventDefault;
 		switch (type) {
 			case "status": {
-				const { homework, student } = criterias;
-				this.touchPress = setTimeout(
+				const target = e.currentTarget;
+				const { homework, student } = criteria;
+				this.menuPressTimer = setTimeout(
 					() =>
 						this.setState({
 							openStatusMenu: !this.state.openStatusMenu,
 							statusAnchorEl:
-								this.state.statusAnchorEl === null ? e.currentTarget : null,
+								this.state.statusAnchorEl === null ? target : null,
 							target: [homework, student] || null
 						}),
 					800
@@ -556,21 +568,8 @@ class HWCourseStudentsList extends Component {
 		}
 	};
 
-	handleTouchEnd = () => {
-		try {
-			clearTimeout(this.touchPress);
-		} catch (err) {}
-	};
-
-	toggleStudentCellClick = (homework, student, status) => e => {
-		e.preventDefault();
-		if (status === "Incomplete") {
-			this.props.dispatch(updateStudentStatus(homework, student, ""));
-		} else if (status === "Complete") {
-			this.props.dispatch(updateStudentStatus(homework, student, "Incomplete"));
-		} else {
-			this.props.dispatch(updateStudentStatus(homework, student, "Complete"));
-		}
+	handleMouseRelease = () => {
+		clearTimeout(this.menuPressTimer);
 	};
 
 	changeStudentStatus(status) {
