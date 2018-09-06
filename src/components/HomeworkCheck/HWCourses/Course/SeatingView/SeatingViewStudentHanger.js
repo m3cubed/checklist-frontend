@@ -7,12 +7,14 @@ import SeatingViewStudentCard from "./SeatingViewStudentCard";
 
 const styles = theme => ({
 	root: {
+		position: "relative",
 		display: "flex",
 		justifyContent: "flex-start",
 		overflow: "scroll hidden",
 		backgroundColor: "grey",
 		height: 125,
-		alignItems: "center"
+		alignItems: "center",
+		width: "inherit"
 	},
 	gridList: {
 		flexWrap: "nowrap",

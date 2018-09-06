@@ -41,6 +41,7 @@ class SeatingViewDashboard extends Component {
 							<AutoSizer>
 								{({ width }) => (
 									<SeatingViewDropContainer
+										courseID={this.props.courseID}
 										students={this.props.hwStudents}
 										seatingPositions={this.props.seatingPositions}
 										maxWidth={width}

@@ -4,13 +4,17 @@ import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { ItemTypes } from "./ItemTypes";
 import { DropTarget } from "react-dnd";
+import debounce from "lodash/debounce";
 import update from "immutability-helper";
 //Accessories
 import Paper from "@material-ui/core/Paper";
 //Components
 import SeatingViewStudentCard from "./SeatingViewStudentCard";
 import SeatingViewStudentHanger from "./SeatingViewStudentHanger";
-import { updatePosition } from "../../../../../actions/HomeworkCheck/seatingPositions";
+import {
+	updatePosition,
+	savePositions
+} from "../../../../../actions/HomeworkCheck/seatingPositions";
 
 const styles = theme => ({
 	root: {
@@ -58,6 +62,15 @@ class SeatingViewContainer extends Component {
 
 	moveGrids(newPosition) {
 		this.props.dispatch(updatePosition(newPosition));
+	}
+
+	componentDidUpdate(prevProps) {
+		if (prevProps.seatingPositions !== this.props.seatingPositions) {
+			debounce(
+				() => this.props.dispatch(savePositions(this.props.courseID)),
+				1500
+			);
+		}
 	}
 
 	render() {
