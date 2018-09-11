@@ -9,19 +9,19 @@ import Paper from "@material-ui/core/Paper";
 //Redux
 import {
 	loadDefaultHWStudents,
-	loadHWStudents
+	loadHWStudents,
 } from "../../../../actions/HomeworkCheck/hwStudents";
 import {
 	loadDefaultHWUnits,
-	loadHWUnits
+	loadHWUnits,
 } from "../../../../actions/HomeworkCheck/hwUnits";
 import {
 	loadDefaultHomeworks,
-	loadHomeworks
+	loadHomeworks,
 } from "../../../../actions/HomeworkCheck/homeworks";
 import {
 	loadDefaultHWStatus,
-	loadHWStatus
+	loadHWStatus,
 } from "../../../../actions/HomeworkCheck/hwStatus";
 import { loadingAPI } from "../../../../api";
 //Components
@@ -35,18 +35,18 @@ import HWStatusBar from "./Status/HWStatusBar";
 import { loadDefaultStudentStatus } from "../../../../actions/HomeworkCheck/studentHWStatus";
 import { changeNavbarTitle } from "../../../../actions/navbar";
 import { loadDefaultHWCourses } from "../../../../actions/HomeworkCheck/hwCourses";
-import { changeViewState } from "../../../../actions/PageStates/hwCheckCourse";
+import { changeViewState } from "../../../../actions/PageStates/page_hwCheckCourse";
 import HWImportMain from "./Importing/HWImportMain";
 import { loadDefaultSeatingPositions } from "../../../../actions/HomeworkCheck/seatingPositions";
 
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: 850
+		height: 850,
 	},
 	unitBar: {
-		position: "static"
-	}
+		position: "static",
+	},
 });
 
 const HWCourseDashboard = props => {
@@ -59,12 +59,12 @@ const HWCourseDashboard = props => {
 				{ action: loadDefaultHWUnits, condition: id },
 				{ action: loadDefaultHWStatus, condition: id },
 				{ action: loadDefaultHomeworks, condition: id },
-				{ action: loadDefaultHWCourses }
+				{ action: loadDefaultHWCourses },
 			],
 			[
 				{ action: loadDefaultStudentStatus, condition: id },
-				{ action: loadDefaultSeatingPositions, condition: id }
-			]
+				{ action: loadDefaultSeatingPositions, condition: id },
+			],
 		]);
 
 		return null;
@@ -80,8 +80,8 @@ class RenderDashBoard extends Component {
 		dispatch(
 			changeNavbarTitle({
 				value: [this.props.hwCourses[id].courseTitle],
-				location: "HWCheck Course"
-			})
+				location: "HWCheck Course",
+			}),
 		);
 		dispatch(changeViewState("Table View"));
 	}
@@ -98,7 +98,7 @@ class RenderDashBoard extends Component {
 		hwDialog: false,
 		unitDialog: false,
 		statusDialog: false,
-		unitID: Object.keys(this.props.hwUnits)[0]
+		unitID: Object.keys(this.props.hwUnits)[0],
 	};
 
 	toggleUnitID = unitID => {
@@ -108,14 +108,14 @@ class RenderDashBoard extends Component {
 	toggleDialogOpen = type => () => {
 		const target = `${type}Dialog`;
 		this.setState({
-			[target]: true
+			[target]: true,
 		});
 	};
 
 	toggleDialogClose = type => () => {
 		const target = type + "Dialog";
 		this.setState({
-			[target]: false
+			[target]: false,
 		});
 	};
 
@@ -179,11 +179,11 @@ function mapStateToProps({ hwUnits, hwStudents, hwCourses }) {
 	return {
 		hwUnits,
 		hwStudents,
-		hwCourses
+		hwCourses,
 	};
 }
 
 export default compose(
 	withStyles(styles),
-	connect(mapStateToProps)
+	connect(mapStateToProps),
 )(HWCourseDashboard);

@@ -13,6 +13,8 @@ import Typography from "@material-ui/core/Typography";
 //Icons
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+//Redux
+import { changeUnit } from "../../../../actions/PageStates/page_hwCheckCourse";
 //Components
 import HWCourseStudentsList from "./StudentList/HWCourseStudentsList";
 import ListUnitMenu from "./Menus/ListUnitMenu";
@@ -22,19 +24,19 @@ const styles = theme => ({
 	root: {
 		flexGrow: 1,
 		height: 700,
-		marginTop: 30
+		marginTop: 30,
 	},
 	unitBar: {
-		position: "static"
+		position: "static",
 	},
 	gridContainer: {
 		height: 650,
 		backgroundColor: theme.palette.primary,
-		display: "block"
+		display: "block",
 	},
 	tabBtn: {
-		button: {}
-	}
+		button: {},
+	},
 });
 
 const searchStudents = props => {
@@ -46,24 +48,38 @@ const searchStudents = props => {
 };
 
 class HWCourseUnitTabs extends Component {
-	static getDerivedStateFromProps(nextProps, state) {
-		if (!state.value && nextProps) {
-			return {
-				value: Object.keys(nextProps.hwUnits)[0]
-			};
-		}
-		return null;
-	}
+	// static getDerivedStateFromProps(nextProps, state) {
+	// 	if (!state.value && nextProps) {
+	// 		return {
+	// 			value: Object.keys(nextProps.hwUnits)[0],
+	// 		};
+	// 	}
+	// 	return null;
+	// }
 	state = {
 		value: Object.keys(this.props.hwUnits)[0],
 		openUnitMenu: false,
 		unitAnchorEl: null,
-		targetUnit: null
+		targetUnit: null,
 	};
+
+	componentDidUpdate(prevProps) {
+		if (
+			prevProps.currentUnit === "" &&
+			this.props.hwUnits !== prevProps.hwUnits
+		) {
+			const newUnit = Object.keys(this.props.hwUnits)[0];
+			this.setState({
+				value: newUnit,
+			});
+			this.props.dispatch(changeUnit(newUnit));
+		}
+	}
 
 	componentDidMount() {
 		const units = Object.keys(this.props.hwUnits);
 		this.props.toggleUnitID(units[0]);
+		this.props.dispatch(changeUnit(units[0]));
 	}
 
 	mountTable(unitID) {
@@ -93,6 +109,7 @@ class HWCourseUnitTabs extends Component {
 
 	handleTabValue = (e, value) => {
 		this.setState({ value });
+		this.props.dispatch(changeUnit(value));
 		this.props.toggleUnitID(value);
 	};
 
@@ -101,7 +118,7 @@ class HWCourseUnitTabs extends Component {
 		this.setState({
 			openUnitMenu: !this.state.openUnitMenu,
 			unitAnchorEl: this.state.unitAnchorEl === null ? e.currentTarget : null,
-			targetUnit: unit || null
+			targetUnit: unit || null,
 		});
 	};
 
@@ -109,7 +126,7 @@ class HWCourseUnitTabs extends Component {
 		this.setState({
 			openUnitMenu: false,
 			unitAnchorEl: null,
-			targetUnit: null
+			targetUnit: null,
 		});
 	};
 
@@ -196,18 +213,19 @@ function mapStateToProps({
 	homeworks,
 	hwStudents,
 	studentHWStatus,
-	hwCheckCourse
+	page_hwCheckCourse,
 }) {
 	return {
 		hwUnits,
 		homeworks,
 		hwStudents,
 		studentHWStatus,
-		view: hwCheckCourse.view
+		currentUnit: page_hwCheckCourse.unit,
+		view: page_hwCheckCourse.view,
 	};
 }
 
 export default compose(
 	withStyles(styles),
-	connect(mapStateToProps)
+	connect(mapStateToProps),
 )(HWCourseUnitTabs);

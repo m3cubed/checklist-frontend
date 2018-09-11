@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 //Components
 import HWImportStudents from "./HWImportStudents";
-import { toggleShowImport } from "../../../../../actions/PageStates/hwCheckCourse";
+import { toggleShowImport } from "../../../../../actions/PageStates/page_hwCheckCourse";
 
 const HWImportMain = props => {
 	const toggleImport = type => () => {
@@ -12,7 +12,7 @@ const HWImportMain = props => {
 	return (
 		<React.Fragment>
 			<HWImportStudents
-				open={props.hwCheckCourse.imports.students}
+				open={props.page_hwCheckCourse.imports.students}
 				toggle={toggleImport}
 				courseID={props.courseID}
 			/>
@@ -20,9 +20,9 @@ const HWImportMain = props => {
 	);
 };
 
-function mapStateToProps({ hwCheckCourse }) {
+function mapStateToProps({ page_hwCheckCourse }) {
 	return {
-		hwCheckCourse
+		page_hwCheckCourse,
 	};
 }
 

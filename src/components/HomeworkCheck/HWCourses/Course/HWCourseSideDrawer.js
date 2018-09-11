@@ -14,32 +14,32 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 //Redux
 import {
 	changeViewState,
-	toggleShowImport
-} from "../../../../actions/PageStates/hwCheckCourse";
+	toggleShowImport,
+} from "../../../../actions/PageStates/page_hwCheckCourse";
 
 const styles = theme => ({
 	root: {
-		flexGrow: 1
+		flexGrow: 1,
 	},
 	nestedList: {
-		paddingLeft: theme.spacing.unit * 4
-	}
+		paddingLeft: theme.spacing.unit * 4,
+	},
 });
 class HWCourseSideDrawer extends Component {
 	state = {
 		viewOpen: false,
-		addOpen: false
+		addOpen: false,
 	};
 
 	handleViewToggle = () => {
 		this.setState(state => ({
-			viewOpen: !state.viewOpen
+			viewOpen: !state.viewOpen,
 		}));
 	};
 
 	handleAddToggle = () => {
 		this.setState(state => ({
-			addOpen: !state.addOpen
+			addOpen: !state.addOpen,
 		}));
 	};
 
@@ -107,5 +107,5 @@ class HWCourseSideDrawer extends Component {
 
 export default compose(
 	withStyles(styles),
-	connect()
+	connect(),
 )(HWCourseSideDrawer);

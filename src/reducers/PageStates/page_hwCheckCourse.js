@@ -1,22 +1,24 @@
 import {
 	CHANGE_VIEW_STATE,
 	TOGGLE_SHOW_IMPORT,
-	TOGGLE_SEATING_HOMEWORK
-} from "../../actions/PageStates/hwCheckCourse";
+	TOGGLE_SEATING_HOMEWORK,
+	CHANGE_UNIT,
+} from "../../actions/PageStates/page_hwCheckCourse";
 
-export default function hwCheckCourse(
+export default function page_hwCheckCourse(
 	state = {
 		view: "",
 		imports: { students: false, homeworks: false },
-		seatingHomework: ""
+		seatingHomework: "",
+		unit: "",
 	},
-	action
+	action,
 ) {
 	switch (action.type) {
 		case CHANGE_VIEW_STATE: {
 			return {
 				...state,
-				view: action.view
+				view: action.view,
 			};
 		}
 		case TOGGLE_SHOW_IMPORT: {
@@ -24,14 +26,20 @@ export default function hwCheckCourse(
 				...state,
 				imports: {
 					...state.imports,
-					[action.item]: !state.imports[action.item]
-				}
+					[action.item]: !state.imports[action.item],
+				},
 			};
 		}
 		case TOGGLE_SEATING_HOMEWORK: {
 			return {
 				...state,
-				seatingHomework: action.homework
+				seatingHomework: action.homework,
+			};
+		}
+		case CHANGE_UNIT: {
+			return {
+				...state,
+				unit: action.unit,
 			};
 		}
 		default:

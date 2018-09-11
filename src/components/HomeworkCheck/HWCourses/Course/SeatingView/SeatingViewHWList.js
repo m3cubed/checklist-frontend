@@ -7,12 +7,12 @@ import MenuList from "@material-ui/core/MenuList";
 import MenuItem from "@material-ui/core/MenuItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import { Divider } from "@material-ui/core";
-import { toggleSeatingHomework } from "../../../../../actions/PageStates/hwCheckCourse";
+import { toggleSeatingHomework } from "../../../../../actions/PageStates/page_hwCheckCourse";
 
 const styles = theme => ({
 	root: {
-		flexGrow: 1
-	}
+		flexGrow: 1,
+	},
 });
 
 class SeatingViewHWList extends Component {
@@ -51,10 +51,19 @@ class SeatingViewHWList extends Component {
 	}
 }
 
-function mapStateToProps({ homeworks, hwCheckCourse }) {
-	return { homeworks, selected: hwCheckCourse.seatingHomework };
+function mapStateToProps({ homeworks, page_hwCheckCourse }) {
+	const unit = page_hwCheckCourse.unit;
+	return {
+		homeworks: Object.keys(homeworks).reduce((acc, cv) => {
+			if (homeworks[cv].unitID === unit) {
+				acc[cv] = homeworks[cv];
+			}
+			return acc;
+		}, {}),
+		selected: page_hwCheckCourse.seatingHomework,
+	};
 }
 export default compose(
 	withStyles(styles),
-	connect(mapStateToProps)
+	connect(mapStateToProps),
 )(SeatingViewHWList);

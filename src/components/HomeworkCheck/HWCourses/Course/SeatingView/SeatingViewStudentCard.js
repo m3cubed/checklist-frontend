@@ -21,7 +21,7 @@ function collect(connect, monitor) {
 	return {
 		connectDragSource: connect.dragSource(),
 		connectDragPreview: connect.dragPreview(),
-		isDragging: monitor.isDragging()
+		isDragging: monitor.isDragging(),
 	};
 }
 
@@ -29,7 +29,7 @@ const gridSource = {
 	beginDrag(props) {
 		const { left, id, top, location } = props;
 		return { left, id, top, height, width, location };
-	}
+	},
 };
 
 const styles = theme => ({
@@ -42,10 +42,10 @@ const styles = theme => ({
 		"&:hover": {
 			cursor: "grab",
 			"&:active": {
-				cursor: "grabbing"
-			}
-		}
-	}
+				cursor: "grabbing",
+			},
+		},
+	},
 });
 
 const SeatingViewStudentCard = props => {
@@ -63,7 +63,7 @@ const SeatingViewStudentCard = props => {
 		firstName,
 		lastName,
 		gender,
-		location
+		location,
 	} = props;
 
 	function handleCardClick() {
@@ -93,7 +93,7 @@ const SeatingViewStudentCard = props => {
 				height,
 				width,
 				top: location === "container" ? top : null,
-				left: location === "container" ? left : null
+				left: location === "container" ? left : null,
 			}}
 		>
 			<Paper
@@ -119,12 +119,15 @@ const SeatingViewStudentCard = props => {
 					</Grid>
 				</Grid>
 			</Paper>
-		</div>
+		</div>,
 	);
 };
 
-function mapStateToProps({ hwStatus, studentHWStatus, hwCheckCourse }, { id }) {
-	const data = studentHWStatus[hwCheckCourse.seatingHomework];
+function mapStateToProps(
+	{ hwStatus, studentHWStatus, page_hwCheckCourse },
+	{ id },
+) {
+	const data = studentHWStatus[page_hwCheckCourse.seatingHomework];
 	if (data) {
 		const status = data[id];
 
@@ -132,13 +135,13 @@ function mapStateToProps({ hwStatus, studentHWStatus, hwCheckCourse }, { id }) {
 		return {
 			status: status || null,
 			color,
-			homework: hwCheckCourse.seatingHomework
+			homework: page_hwCheckCourse.seatingHomework,
 		};
 	} else {
 		return {
 			status: null,
 			color: null,
-			homework: hwCheckCourse.seatingHomework
+			homework: page_hwCheckCourse.seatingHomework,
 		};
 	}
 }
@@ -146,5 +149,5 @@ function mapStateToProps({ hwStatus, studentHWStatus, hwCheckCourse }, { id }) {
 export default compose(
 	withStyles(styles),
 	connect(mapStateToProps),
-	DragSource(ItemTypes.STUDENT_CARDS, gridSource, collect)
+	DragSource(ItemTypes.STUDENT_CARDS, gridSource, collect),
 )(SeatingViewStudentCard);

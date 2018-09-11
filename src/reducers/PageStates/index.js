@@ -1,5 +1,5 @@
-import hwCheckCourse from "./hwCheckCourse";
+import page_hwCheckCourse from "./page_hwCheckCourse";
 
 export const pageStates = {
-	hwCheckCourse
+	page_hwCheckCourse,
 };

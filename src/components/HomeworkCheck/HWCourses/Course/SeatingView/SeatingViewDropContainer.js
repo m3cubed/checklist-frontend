@@ -13,15 +13,15 @@ import SeatingViewStudentCard from "./SeatingViewStudentCard";
 import SeatingViewStudentHanger from "./SeatingViewStudentHanger";
 import {
 	updatePosition,
-	savePositions
+	savePositions,
 } from "../../../../../actions/HomeworkCheck/seatingPositions";
 import ListStatusMenu from "../Menus/ListStatusMenu";
 import { updateStudentStatus } from "../../../../../actions/HomeworkCheck/studentHWStatus";
 
 const styles = theme => ({
 	root: {
-		flexGrow: 1
-	}
+		flexGrow: 1,
+	},
 });
 
 const gridTarget = {
@@ -47,16 +47,16 @@ const gridTarget = {
 				...item,
 				left: hMove,
 				top: vMove,
-				location: "container"
+				location: "container",
 			});
 		} else if (item.location === "container") {
 			component.moveGrids({
 				...item,
 				left: Math.floor(hMove / 5) * 5,
-				top: Math.floor(vMove / 5) * 5
+				top: Math.floor(vMove / 5) * 5,
 			});
 		}
-	}
+	},
 };
 
 class SeatingViewContainer extends Component {
@@ -65,7 +65,7 @@ class SeatingViewContainer extends Component {
 		this.state = {
 			openStatusMenu: false,
 			statusAnchorEl: null,
-			target: null
+			target: null,
 		};
 
 		this.changeStudentStatus = this.changeStudentStatus.bind(this);
@@ -79,7 +79,7 @@ class SeatingViewContainer extends Component {
 		if (prevProps.seatingPositions !== this.props.seatingPositions) {
 			debounce(
 				() => this.props.dispatch(savePositions(this.props.courseID)),
-				1500
+				1500,
 			);
 		}
 	}
@@ -91,19 +91,19 @@ class SeatingViewContainer extends Component {
 				openStatusMenu: !this.state.openStatusMenu,
 				statusAnchorEl:
 					this.state.statusAnchorEl === null ? e.currentTarget : null,
-				target: [homework, student] || null
+				target: [homework, student] || null,
 			});
 		}
 	};
 
 	changeStudentStatus(status) {
 		this.props.dispatch(
-			updateStudentStatus(this.state.target[0], this.state.target[1], status)
+			updateStudentStatus(this.state.target[0], this.state.target[1], status),
 		);
 		this.setState({
 			openStatusMenu: !this.state.openStatusMenu,
 			statusAnchorEl: null,
-			target: null
+			target: null,
 		});
 	}
 
@@ -113,7 +113,7 @@ class SeatingViewContainer extends Component {
 			students,
 			seatingPositions,
 			maxWidth,
-			homeworkID
+			homeworkID,
 		} = this.props;
 		return (
 			<React.Fragment>
@@ -130,7 +130,7 @@ class SeatingViewContainer extends Component {
 								height: 500,
 								border: "3px solid #8D6E63",
 								position: "relative",
-								backgroundColor: "#D7CCC8"
+								backgroundColor: "#D7CCC8",
 							}}
 						>
 							{Object.keys(seatingPositions).length > 0
@@ -148,7 +148,7 @@ class SeatingViewContainer extends Component {
 													location="container"
 													onContextMenu={this.toggleStatusMenu(
 														homeworkID,
-														student
+														student,
 													)}
 												/>
 											);
@@ -157,18 +157,18 @@ class SeatingViewContainer extends Component {
 								: null}
 						</div>
 						<SeatingViewStudentHanger />
-					</div>
+					</div>,
 				)}
 			</React.Fragment>
 		);
 	}
 }
 
-function mapStateToProps({ hwStudents, seatingPositions, hwCheckCourse }) {
+function mapStateToProps({ hwStudents, seatingPositions, page_hwCheckCourse }) {
 	return {
 		hwStudents,
 		seatingPositions,
-		homeworkID: hwCheckCourse.seatingHomework
+		homeworkID: page_hwCheckCourse.seatingHomework,
 	};
 }
 
@@ -176,6 +176,6 @@ export default compose(
 	withStyles(styles),
 	connect(mapStateToProps),
 	DropTarget(ItemTypes.STUDENT_CARDS, gridTarget, connect => ({
-		connectDropTarget: connect.dropTarget()
-	}))
+		connectDropTarget: connect.dropTarget(),
+	})),
 )(SeatingViewContainer);

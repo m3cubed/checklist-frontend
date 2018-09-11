@@ -9,28 +9,28 @@ export const UPDATE_HW_UNIT = "UPDATE_HW_UNIT";
 export function loadHWUnits(units) {
 	return {
 		type: LOAD_HW_UNITS,
-		units
+		units,
 	};
 }
 
 function addHWUnit(unit) {
 	return {
 		type: ADD_HW_UNIT,
-		unit
+		unit,
 	};
 }
 
 function deleteHWUnit(id) {
 	return {
 		type: DELETE_HW_UNIT,
-		id
+		id,
 	};
 }
 
 function updateHWUnit(unit) {
 	return {
 		type: UPDATE_HW_UNIT,
-		unit
+		unit,
 	};
 }
 
@@ -43,9 +43,9 @@ export function handleAddHWUnit(unit) {
 			method: "POST",
 			credentials: "include",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ unit })
+			body: JSON.stringify({ unit }),
 		})
 			.then(res => res.json())
 			.then(json => {
@@ -62,9 +62,9 @@ export function loadDefaultHWUnits(courseID, resolve, reject) {
 			method: "PUT",
 			credentials: "include",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ courseID })
+			body: JSON.stringify({ courseID }),
 		})
 			.then(res => res.json())
 			.then(json => {
@@ -76,13 +76,13 @@ export function loadDefaultHWUnits(courseID, resolve, reject) {
 
 export function handleDeleteHWUnit(id) {
 	return dispatch => {
-		fetch(`${CONNECTION}/students/delete`, {
+		fetch(`${CONNECTION}/homework_check_units/delete`, {
 			method: "PUT",
 			credentials: "include",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ id })
+			body: JSON.stringify({ id }),
 		})
 			.then(res => res.json())
 			.then(json => {

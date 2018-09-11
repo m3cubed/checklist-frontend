@@ -16,7 +16,7 @@ import Papa from "papaparse";
 //Components
 import HWImportGrids from "./HWImportGrids";
 import { handleSubmitMultipleStudents } from "../../../../../actions/HomeworkCheck/hwStudents";
-import { toggleShowImport } from "../../../../../actions/PageStates/hwCheckCourse";
+import { toggleShowImport } from "../../../../../actions/PageStates/page_hwCheckCourse";
 
 const styles = theme => ({
 	gridCells: {
@@ -25,15 +25,15 @@ const styles = theme => ({
 		resize: "none",
 		height: 20,
 		fontSize: "12px",
-		margin: 0
-	}
+		margin: 0,
+	},
 });
 
 class HWImportStudents extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			import: true
+			import: true,
 		};
 
 		this.toggleImport = this.toggleImport.bind(this);
@@ -44,13 +44,13 @@ class HWImportStudents extends Component {
 	toggleImport = () => {
 		this.setState({
 			import: !this.state.import,
-			grid: null
+			grid: null,
 		});
 	};
 
 	handleGrid = grid => {
 		this.setState({
-			grid
+			grid,
 		});
 	};
 
@@ -68,7 +68,7 @@ class HWImportStudents extends Component {
 
 			this.setState({
 				import: false,
-				grid: csv
+				grid: csv,
 			});
 		};
 	};
@@ -76,7 +76,7 @@ class HWImportStudents extends Component {
 	handleSubmit = () => {
 		if (this.state.grid !== null) {
 			this.props.dispatch(
-				handleSubmitMultipleStudents(this.state.grid, this.props.courseID)
+				handleSubmitMultipleStudents(this.state.grid, this.props.courseID),
 			);
 		}
 		this.props.dispatch(toggleShowImport("students"));
@@ -137,7 +137,7 @@ class HWImportStudents extends Component {
 
 export default compose(
 	withStyles(styles),
-	connect()
+	connect(),
 )(HWImportStudents);
 
 // <Button color="secondary" onClick={this.toggleImport}>
