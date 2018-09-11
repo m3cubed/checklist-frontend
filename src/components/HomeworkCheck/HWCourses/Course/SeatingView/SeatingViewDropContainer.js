@@ -72,21 +72,6 @@ const debounceStatus = debounce((courseID, dispatch) =>
 );
 
 class SeatingViewContainer extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			openStatusMenu: false,
-			statusAnchorEl: null,
-			target: null,
-		};
-
-		this.changeStudentStatus = this.changeStudentStatus.bind(this);
-	}
-
-	moveGrids(newPosition) {
-		this.props.dispatch(updatePosition(newPosition));
-	}
-
 	componentDidUpdate(prevProps) {
 		const {
 			seatingPositions,
@@ -100,6 +85,25 @@ class SeatingViewContainer extends Component {
 		if (prevProps.studentHWStatus !== studentHWStatus) {
 			debounce(courseID, dispatch);
 		}
+	}
+
+	componentWillUnmount() {
+		this.props.dispatch(saveAllStatus(this.props.courseID));
+	}
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			openStatusMenu: false,
+			statusAnchorEl: null,
+			target: null,
+		};
+
+		this.changeStudentStatus = this.changeStudentStatus.bind(this);
+	}
+
+	moveGrids(newPosition) {
+		this.props.dispatch(updatePosition(newPosition));
 	}
 
 	toggleStatusMenu = (homework, student) => e => {
