@@ -1,5 +1,6 @@
 import { CONNECTION } from "../../config/config";
 import { nameDuplicate } from "../../api";
+import _debounce from "lodash";
 
 export const LOAD_STUDENT_HW_STATUS = "LOAD_STUDENT_HW_STATUS";
 export const ADD_STUDENT_HW_STATUS = "ADD_STUDENT_HW_STATUS";
@@ -10,21 +11,21 @@ export const UPDATE_COLUMN_HW_STATUS = "UPDATE_COLUMN_HW_STATUS";
 export function loadStudentStatus(studentHWStatus) {
 	return {
 		type: LOAD_STUDENT_HW_STATUS,
-		studentHWStatus
+		studentHWStatus,
 	};
 }
 
 function addStudentStatus(studentHWStatus) {
 	return {
 		type: ADD_STUDENT_HW_STATUS,
-		studentHWStatus
+		studentHWStatus,
 	};
 }
 
 export function deleteStudentStatus(homeworkID) {
 	return {
 		type: DELETE_STUDENT_HW_STATUS,
-		homeworkID
+		homeworkID,
 	};
 }
 
@@ -33,18 +34,16 @@ export function updateStudentStatus(homework, student, status) {
 		type: UPDATE_STUDENT_HW_STATUS,
 		homework,
 		student,
-		status
+		status,
 	};
 }
 
 function updateColumnStatus(column) {
 	return {
 		type: UPDATE_COLUMN_HW_STATUS,
-		column
+		column,
 	};
 }
-
-export function updateAll(homework) {}
 
 export function handleAddStudentStatus(studentHWStatus) {
 	return dispatch => {
@@ -52,9 +51,9 @@ export function handleAddStudentStatus(studentHWStatus) {
 			method: "POST",
 			credentials: "include",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ studentHWStatus })
+			body: JSON.stringify({ studentHWStatus }),
 		})
 			.then(res => res.json())
 			.then(json => {
@@ -86,9 +85,9 @@ export function loadDefaultStudentStatus(courseID, resolve, reject) {
 			method: "PUT",
 			credentials: "include",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ courseID })
+			body: JSON.stringify({ courseID }),
 		})
 			.then(res => res.json())
 			.then(json => {
@@ -117,7 +116,7 @@ export function handleUpdateColumn(hwID, statusTitle) {
 
 		const column = {
 			id: hwID,
-			values: {}
+			values: {},
 		};
 		Object.keys(hwStudents).forEach(cv => {
 			column.values[cv] = statusTitle;
@@ -136,9 +135,9 @@ export function saveAllStatus(courseID) {
 			method: "POST",
 			credentials: "include",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ statusList, courseID })
+			body: JSON.stringify({ statusList, courseID }),
 		})
 			.then(res => res.json())
 			.then(json => console.log(json));

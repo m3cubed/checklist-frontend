@@ -16,7 +16,10 @@ import {
 	savePositions,
 } from "../../../../../actions/HomeworkCheck/seatingPositions";
 import ListStatusMenu from "../Menus/ListStatusMenu";
-import { updateStudentStatus } from "../../../../../actions/HomeworkCheck/studentHWStatus";
+import {
+	updateStudentStatus,
+	saveAllStatus,
+} from "../../../../../actions/HomeworkCheck/studentHWStatus";
 
 const styles = theme => ({
 	root: {
@@ -59,6 +62,15 @@ const gridTarget = {
 	},
 };
 
+const debouncePosition = debounce(
+	(courseID, dispatch) => dispatch(savePositions(courseID)),
+	1500,
+);
+
+const debounceStatus = debounce((courseID, dispatch) =>
+	dispatch(saveAllStatus(courseID), 1500),
+);
+
 class SeatingViewContainer extends Component {
 	constructor(props) {
 		super(props);
@@ -76,11 +88,17 @@ class SeatingViewContainer extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		if (prevProps.seatingPositions !== this.props.seatingPositions) {
-			debounce(
-				() => this.props.dispatch(savePositions(this.props.courseID)),
-				1500,
-			);
+		const {
+			seatingPositions,
+			studentHWStatus,
+			courseID,
+			dispatch,
+		} = this.props;
+		if (prevProps.seatingPositions !== seatingPositions) {
+			debouncePosition(courseID, dispatch);
+		}
+		if (prevProps.studentHWStatus !== studentHWStatus) {
+			debounce(courseID, dispatch);
 		}
 	}
 
@@ -164,8 +182,14 @@ class SeatingViewContainer extends Component {
 	}
 }
 
-function mapStateToProps({ hwStudents, seatingPositions, page_hwCheckCourse }) {
+function mapStateToProps({
+	hwStudents,
+	seatingPositions,
+	page_hwCheckCourse,
+	studentHWStatus,
+}) {
 	return {
+		studentHWStatus,
 		hwStudents,
 		seatingPositions,
 		homeworkID: page_hwCheckCourse.seatingHomework,

@@ -81,7 +81,6 @@ const SeatingViewStudentCard = props => {
 				default:
 					newStatus = "Complete";
 			}
-			console.log(newStatus);
 			props.dispatch(updateStudentStatus(homework, id, newStatus));
 		}
 	}

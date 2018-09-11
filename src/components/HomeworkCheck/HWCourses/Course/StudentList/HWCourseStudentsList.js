@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import update from "immutability-helper";
 import "react-virtualized/styles.css"; // only needs to be imported once
 import scrollbarSize from "dom-helpers/util/scrollbarSize";
+import debounce from "lodash/debounce";
 //Accessories
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -22,7 +23,7 @@ import ListStatusMenu from "../Menus/ListStatusMenu";
 import {
 	updateStudentStatus,
 	handleUpdateColumn,
-	saveAllStatus
+	saveAllStatus,
 } from "../../../../../actions/HomeworkCheck/studentHWStatus";
 import ListStudentMenu from "../Menus/ListStudentMenu";
 import { handleUpdateHWStudent } from "../../../../../actions/HomeworkCheck/hwStudents";
@@ -31,43 +32,43 @@ const styles = theme => ({
 	root: {
 		flexGrow: 1,
 		width: "100%",
-		height: "100%"
+		height: "100%",
 	},
 	studentColContainer: {
-		overflow: "hidden hidden !important"
+		overflow: "hidden hidden !important",
 	},
 	hwHeaderContainer: {
-		overflow: "hidden hidden !important"
+		overflow: "hidden hidden !important",
 	},
 	topRow: {
 		flexGrow: 1,
 		border: "1px solid #e0e0e0",
 		borderRight: "none",
-		borderLeft: "none"
+		borderLeft: "none",
 	},
 	studentColLeft: {
 		flexGrow: 1,
 		border: "1px solid #e0e0e0",
 		borderRight: "none",
 		borderLeft: "none",
-		borderTop: "none"
+		borderTop: "none",
 	},
 	studentCol: {
 		flexGrow: 1,
 		border: "1px solid #e0e0e0",
 		borderLeft: "none",
-		borderTop: "none"
+		borderTop: "none",
 	},
 	studentBody: {
 		flexGrow: 1,
 		border: "1px solid #e0e0e0",
 		borderRight: "none",
 		borderLeft: "none",
-		borderTop: "none"
+		borderTop: "none",
 	},
 	containerPaper: {
 		flexGrow: 1,
-		position: "relative"
+		position: "relative",
 	},
 	statusContainer: {
 		height: 30,
@@ -75,11 +76,11 @@ const styles = theme => ({
 		borderRadius: 5,
 		display: "flex",
 		justifyContent: "center",
-		alignItems: "center"
+		alignItems: "center",
 	},
 	editInput: {
-		textAlign: "center"
-	}
+		textAlign: "center",
+	},
 });
 
 function _createState(props) {
@@ -89,14 +90,14 @@ function _createState(props) {
 		acc.push([
 			homeworks[cv].homeworkTitle,
 			homeworks[cv].submitDate,
-			homeworks[cv].id
+			homeworks[cv].id,
 		]);
 		return acc;
 	}, []);
 
 	const state = {
 		homeworks: [hwTitles],
-		students: []
+		students: [],
 	};
 
 	state.homeworksColLength = Object.keys(state.homeworks[0]).length;
@@ -105,7 +106,7 @@ function _createState(props) {
 		state.students.push([
 			hwStudents[cv].firstName,
 			hwStudents[cv].lastName,
-			hwStudents[cv].id
+			hwStudents[cv].id,
 		]);
 	});
 
@@ -142,7 +143,7 @@ function _dateConvertor(date) {
 		"September",
 		"October",
 		"November",
-		"December"
+		"December",
 	];
 	date = date.split("-");
 	date.shift();
@@ -151,11 +152,15 @@ function _dateConvertor(date) {
 	return date.join(" ");
 }
 
+const debounceStatus = debounce((courseID, dispatch) =>
+	dispatch(saveAllStatus(courseID), 1500),
+);
+
 class HWCourseStudentsList extends Component {
 	static getDerivedStateFromProps(nextProps, state) {
 		if (nextProps) {
 			return {
-				..._createState(nextProps)
+				..._createState(nextProps),
 			};
 		} else {
 			return { ...state };
@@ -167,6 +172,7 @@ class HWCourseStudentsList extends Component {
 			prevProps.studentHWStatus !== this.props.studentHWStatus &&
 			this._setStudentBodyRef
 		) {
+			debounceStatus(this.props.courseID, this.props.dispatch);
 			this._setStudentBodyRef.current.recomputeGridSize();
 		}
 		if (
@@ -212,7 +218,7 @@ class HWCourseStudentsList extends Component {
 			bodyRowHeight: 50,
 			studentEdit: null,
 			hwEdit: null,
-			tempEdit: ""
+			tempEdit: "",
 		};
 
 		this._setStudentBodyRef = React.createRef();
@@ -252,7 +258,7 @@ class HWCourseStudentsList extends Component {
 							paddingTop: 6,
 							paddingBottom: 6,
 							paddingLeft: 7,
-							paddingRight: 7
+							paddingRight: 7,
 						}}
 					>
 						<AddIcon />
@@ -308,7 +314,7 @@ class HWCourseStudentsList extends Component {
 					key={key}
 					style={{
 						...style,
-						backgroundColor: rowIndex % 2 === 1 ? "#f5f5f5" : "none"
+						backgroundColor: rowIndex % 2 === 1 ? "#f5f5f5" : "none",
 					}}
 				/>
 			);
@@ -329,7 +335,7 @@ class HWCourseStudentsList extends Component {
 					key={key}
 					style={{
 						...style,
-						backgroundColor: rowIndex % 2 === 1 ? "#f5f5f5" : "none"
+						backgroundColor: rowIndex % 2 === 1 ? "#f5f5f5" : "none",
 					}}
 					justify="center"
 					alignItems="center"
@@ -357,14 +363,14 @@ class HWCourseStudentsList extends Component {
 				key={key}
 				style={{
 					...style,
-					backgroundColor: rowIndex % 2 === 1 ? "#f5f5f5" : "none"
+					backgroundColor: rowIndex % 2 === 1 ? "#f5f5f5" : "none",
 				}}
 				justify="center"
 				alignItems="center"
 				onDoubleClick={this.toggleStudentEdit([
 					student[2],
 					columnIndex,
-					student[columnIndex]
+					student[columnIndex],
 				])}
 				onContextMenu={this.toggleStudentMenu(student[2])}
 			>
@@ -387,7 +393,7 @@ class HWCourseStudentsList extends Component {
 					key={key}
 					style={{
 						...style,
-						backgroundColor: rowIndex % 2 === 1 ? "#f5f5f5" : "none"
+						backgroundColor: rowIndex % 2 === 1 ? "#f5f5f5" : "none",
 					}}
 				/>
 			);
@@ -407,14 +413,14 @@ class HWCourseStudentsList extends Component {
 					key={key}
 					style={{
 						...style,
-						backgroundColor: rowIndex % 2 === 1 ? "#f5f5f5" : "none"
+						backgroundColor: rowIndex % 2 === 1 ? "#f5f5f5" : "none",
 					}}
 					aria-owns={this.state.statusAnchorEl ? "status_body_menu" : null}
 					onClick={this.toggleStudentCellClick(whichHW, whichStudent, status)}
 					onContextMenu={this.toggleStatusMenu(whichHW, whichStudent)}
 					onTouchStart={this.handleMouseDownPress("status", {
 						homework: whichHW,
-						student: whichStudent
+						student: whichStudent,
 					})}
 					onTouchEnd={this.handleMouseRelease}
 					justify="center"
@@ -428,7 +434,7 @@ class HWCourseStudentsList extends Component {
 							style={{
 								backgroundColor: hwStatus[status]
 									? hwStatus[status].color
-									: "inherit"
+									: "inherit",
 							}}
 							align="center"
 						>
@@ -444,13 +450,13 @@ class HWCourseStudentsList extends Component {
 		const { studentEdit } = this.state;
 		studentEdit[2] = e.target.value;
 		this.setState({
-			studentEdit
+			studentEdit,
 		});
 	};
 
 	toggleStudentEdit = target => () => {
 		this.setState({
-			studentEdit: target
+			studentEdit: target,
 		});
 	};
 
@@ -483,7 +489,7 @@ class HWCourseStudentsList extends Component {
 		} finally {
 			setTimeout(() => {
 				this.setState({
-					studentEdit: null
+					studentEdit: null,
 				});
 			}, 200);
 		}
@@ -494,7 +500,7 @@ class HWCourseStudentsList extends Component {
 		this.setState({
 			openHWMenu: !this.state.openHWMenu,
 			anchorEl: this.state.anchorEl === null ? e.currentTarget : null,
-			targetHW: homework || null
+			targetHW: homework || null,
 		});
 	};
 
@@ -502,7 +508,7 @@ class HWCourseStudentsList extends Component {
 		this.setState({
 			openHWMenu: false,
 			anchorEl: null,
-			targetHW: null
+			targetHW: null,
 		});
 	};
 
@@ -513,7 +519,7 @@ class HWCourseStudentsList extends Component {
 			openStudentMenu: !this.state.openStudentMenu,
 			studentAnchorEl:
 				this.state.studentAnchorEl === null ? e.currentTarget : null,
-			targetStudent: student || null
+			targetStudent: student || null,
 		});
 	};
 
@@ -521,7 +527,7 @@ class HWCourseStudentsList extends Component {
 		this.setState({
 			openStudentMenu: false,
 			studentAnchorEl: null,
-			targetStudent: null
+			targetStudent: null,
 		});
 	};
 
@@ -531,7 +537,7 @@ class HWCourseStudentsList extends Component {
 			openStatusMenu: !this.state.openStatusMenu,
 			statusAnchorEl:
 				this.state.statusAnchorEl === null ? e.currentTarget : null,
-			target: [homework, student] || null
+			target: [homework, student] || null,
 		});
 	};
 
@@ -560,9 +566,9 @@ class HWCourseStudentsList extends Component {
 							openStatusMenu: !this.state.openStatusMenu,
 							statusAnchorEl:
 								this.state.statusAnchorEl === null ? target : null,
-							target: [homework, student] || null
+							target: [homework, student] || null,
 						}),
-					250
+					250,
 				);
 				break;
 			}
@@ -577,12 +583,12 @@ class HWCourseStudentsList extends Component {
 
 	changeStudentStatus(status) {
 		this.props.dispatch(
-			updateStudentStatus(this.state.target[0], this.state.target[1], status)
+			updateStudentStatus(this.state.target[0], this.state.target[1], status),
 		);
 		this.setState({
 			openStatusMenu: !this.state.openStatusMenu,
 			statusAnchorEl: null,
-			target: null
+			target: null,
 		});
 	}
 
@@ -591,14 +597,14 @@ class HWCourseStudentsList extends Component {
 		this.setState({
 			openHWMenu: !this.state.openHWMenu,
 			anchorEl: null,
-			targetHW: null
+			targetHW: null,
 		});
 	}
 
 	_measureLengths = state => {
 		return {
 			studentRowLength: Object.keys(state.students.length),
-			homeworksColLength: Object.keys(state.homeworks)
+			homeworksColLength: Object.keys(state.homeworks),
 		};
 	};
 
@@ -645,7 +651,7 @@ class HWCourseStudentsList extends Component {
 								scrollHeight,
 								scrollLeft,
 								scrollTop,
-								scrollWidth
+								scrollWidth,
 							}) => (
 								<Grid
 									container
@@ -658,7 +664,7 @@ class HWCourseStudentsList extends Component {
 												height: 40,
 												zIndex: 3,
 												boxShadow: "none",
-												borderRadius: 0
+												borderRadius: 0,
 											}}
 										>
 											<AutoSizer>
@@ -674,7 +680,7 @@ class HWCourseStudentsList extends Component {
 												height: 40,
 												zIndex: 3,
 												boxShadow: "none",
-												borderRadius: "none"
+												borderRadius: "none",
 											}}
 										>
 											<AutoSizer>
@@ -685,7 +691,7 @@ class HWCourseStudentsList extends Component {
 														cellRenderer={this._renderHWHeaderCell}
 														columnCount={Math.max(
 															this.state.homeworks[0].length,
-															Math.ceil(width / this.state.bodyColWidth)
+															Math.ceil(width / this.state.bodyColWidth),
 														)}
 														columnWidth={this.state.bodyColWidth}
 														rowCount={1}
@@ -697,7 +703,7 @@ class HWCourseStudentsList extends Component {
 														scrollLeft={scrollLeft}
 														containerStyle={{
 															pointerEvents: "auto",
-															overflow: "hidden hidden"
+															overflow: "hidden hidden",
 														}}
 													/>
 												)}
@@ -711,7 +717,7 @@ class HWCourseStudentsList extends Component {
 												zIndex: 2,
 												borderRadius: 0,
 												boxShadow:
-													"5px 0px 5px -5px rgba(0, 0, 0, 0.2),10px 0px 20px -3px rgba(0, 0, 0, 0.14)"
+													"5px 0px 5px -5px rgba(0, 0, 0, 0.2),10px 0px 20px -3px rgba(0, 0, 0, 0.14)",
 											}}
 										>
 											<AutoSizer>
@@ -724,7 +730,7 @@ class HWCourseStudentsList extends Component {
 														columnWidth={width / 2}
 														rowCount={Math.max(
 															this.state.students.length,
-															Math.ceil(height / this.state.bodyRowHeight)
+															Math.ceil(height / this.state.bodyRowHeight),
 														)}
 														rowHeight={this.state.bodyRowHeight}
 														height={height - scrollbarSize()}
@@ -734,7 +740,7 @@ class HWCourseStudentsList extends Component {
 														scrollTop={scrollTop}
 														containerStyle={{
 															pointerEvents: "auto",
-															overflow: "hidden hidden"
+															overflow: "hidden hidden",
 														}}
 													/>
 												)}
@@ -750,12 +756,12 @@ class HWCourseStudentsList extends Component {
 														cellRenderer={this._renderStudentBodyCell}
 														columnCount={Math.max(
 															this.state.homeworks[0].length,
-															Math.ceil(width / this.state.bodyColWidth)
+															Math.ceil(width / this.state.bodyColWidth),
 														)}
 														columnWidth={this.state.bodyColWidth}
 														rowCount={Math.max(
 															this.state.students.length,
-															Math.ceil(height / this.state.bodyRowHeight)
+															Math.ceil(height / this.state.bodyRowHeight),
 														)}
 														rowHeight={this.state.bodyRowHeight}
 														height={height}
@@ -782,12 +788,12 @@ class HWCourseStudentsList extends Component {
 
 function mapStateToProps(
 	{ hwStudents, homeworks, hwStatus, studentHWStatus },
-	{ unitID }
+	{ unitID },
 ) {
 	Object.keys(homeworks).forEach(item => {
 		if (homeworks[item].unitID !== unitID) {
 			homeworks = update(homeworks, {
-				$unset: [item]
+				$unset: [item],
 			});
 		}
 	});
@@ -796,11 +802,11 @@ function mapStateToProps(
 		hwStudents,
 		homeworks,
 		hwStatus,
-		studentHWStatus
+		studentHWStatus,
 	};
 }
 
 export default compose(
 	withStyles(styles),
-	connect(mapStateToProps)
+	connect(mapStateToProps),
 )(HWCourseStudentsList);
