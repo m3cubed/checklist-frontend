@@ -6,14 +6,14 @@ export const LOAD_POSITIONS = "LOAD_POSITIONS";
 export function updatePosition(student) {
 	return {
 		type: UPDATE_POSITION,
-		student
+		student,
 	};
 }
 
 function loadPositions(positions) {
 	return {
 		type: LOAD_POSITIONS,
-		positions
+		positions,
 	};
 }
 
@@ -38,9 +38,9 @@ export function loadDefaultSeatingPositions(courseID, resolve, reject) {
 			method: "PUT",
 			credentials: "include",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ courseID })
+			body: JSON.stringify({ courseID }),
 		})
 			.then(res => res.json())
 			.then(json => {
@@ -72,12 +72,12 @@ export function savePositions(courseID) {
 		const { seatingPositions } = getState();
 
 		fetch(`${CONNECTION}/seating_positions/upsert`, {
-			method: "POST",
+			method: "PUT",
 			credentials: "include",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ seatingPositions, courseID })
+			body: JSON.stringify({ seatingPositions, courseID }),
 		})
 			.then(res => res.json())
 			.then(json => console.log(json));
