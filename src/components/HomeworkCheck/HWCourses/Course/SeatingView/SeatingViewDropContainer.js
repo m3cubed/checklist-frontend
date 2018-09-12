@@ -83,7 +83,7 @@ class SeatingViewContainer extends Component {
 			debouncePosition(courseID, dispatch);
 		}
 		if (prevProps.studentHWStatus !== studentHWStatus) {
-			debounce(courseID, dispatch);
+			debounceStatus(courseID, dispatch);
 		}
 	}
 
