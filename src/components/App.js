@@ -4,10 +4,10 @@ import compose from "recompose/compose";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import {
-	BrowserRouter as Router,
+	HashRouter as Router,
 	Route,
 	Redirect,
-	Switch
+	Switch,
 } from "react-router-dom";
 //Components
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -29,7 +29,7 @@ const styles = theme => ({
 		zIndex: 1,
 		overflow: "hidden",
 		position: "relative",
-		display: "flex"
+		display: "flex",
 	},
 	content: {
 		flexGrow: 1,
@@ -38,10 +38,10 @@ const styles = theme => ({
 		minWidth: 0,
 		overflow: "scroll",
 		[theme.breakpoints.down("lg")]: {
-			padding: 0
-		}
+			padding: 0,
+		},
 	},
-	toolbar: theme.mixins.toolbar
+	toolbar: theme.mixins.toolbar,
 });
 
 const AuthRoute = ({ component: Component, auth, ...rest }) => (
@@ -54,7 +54,7 @@ const AuthRoute = ({ component: Component, auth, ...rest }) => (
 				<Redirect
 					to={{
 						pathname: "/login",
-						state: { from: props.location }
+						state: { from: props.location },
 					}}
 				/>
 			)
@@ -81,7 +81,7 @@ const AuthTeacherRoute = ({
 				<Redirect
 					to={{
 						pathname: "/login",
-						state: { from: props.location }
+						state: { from: props.location },
 					}}
 				/>
 			)
@@ -93,11 +93,11 @@ class App extends Component {
 	static getDerivedStateFromProps(nextProps) {
 		if (nextProps.authUser === false) {
 			return {
-				authUserID: ""
+				authUserID: "",
 			};
 		}
 		return {
-			authUserID: nextProps.authUser.id
+			authUserID: nextProps.authUser.id,
 		};
 	}
 
@@ -214,11 +214,11 @@ class App extends Component {
 function mapStateToProps({ authUser, loading }) {
 	return {
 		authUser,
-		loading
+		loading,
 	};
 }
 
 export default compose(
 	withStyles(styles),
-	connect(mapStateToProps)
+	connect(mapStateToProps),
 )(App);
