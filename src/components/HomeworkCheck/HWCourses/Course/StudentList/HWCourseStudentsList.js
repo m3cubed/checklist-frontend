@@ -555,7 +555,7 @@ class HWCourseStudentsList extends Component {
 	};
 
 	handleMouseDownPress = (type, criteria) => e => {
-		e.preventDefault;
+		e.preventDefault();
 		switch (type) {
 			case "status": {
 				const target = e.currentTarget;
