@@ -19,29 +19,29 @@ const theme = createMuiTheme({
 			main: "#7cb342",
 			light: "#aee571",
 			dark: "#4b830d",
-			contrastText: "#000"
+			contrastText: "#000",
 		},
 		secondary: {
 			main: "#b71c1c",
 			light: "#fo05545",
 			dark: "#7f0000",
-			contrastText: "#fff"
-		}
-	}
+			contrastText: "#fff",
+		},
+	},
 });
 
-const persistedState = loadState();
+// const persistedState = loadState();
 
-const store = createStore(reducer, persistedState, middleware);
+const store = createStore(reducer, middleware);
 
-store.subscribe(
-	throttle(() => {
-		saveState({
-			studentHWStatus: store.getState().studentHWStatus,
-			seatingPositions: store.getState().seatingPositions
-		});
-	}, 1000)
-);
+// store.subscribe(
+// 	throttle(() => {
+// 		saveState({
+// 			studentHWStatus: store.getState().studentHWStatus,
+// 			seatingPositions: store.getState().seatingPositions
+// 		});
+// 	}, 1000)
+// );
 
 auth.checkAuthentication(store.dispatch).then(() => {
 	ReactDOM.render(
@@ -50,7 +50,7 @@ auth.checkAuthentication(store.dispatch).then(() => {
 				<App auth={auth} />
 			</MuiThemeProvider>
 		</Provider>,
-		document.getElementById("root")
+		document.getElementById("root"),
 	);
 });
 // registerServiceWorker();
