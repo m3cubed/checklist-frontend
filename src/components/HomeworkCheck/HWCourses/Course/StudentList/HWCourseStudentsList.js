@@ -569,7 +569,7 @@ class HWCourseStudentsList extends Component {
 								this.state.statusAnchorEl === null ? target : null,
 							target: [homework, student] || null,
 						}),
-					250,
+					200,
 				);
 				break;
 			}
@@ -579,7 +579,7 @@ class HWCourseStudentsList extends Component {
 	};
 
 	handleMouseRelease = e => {
-		e.preventDefault();
+		// e.preventDefault();
 		clearTimeout(this.menuPressTimer);
 	};
 
