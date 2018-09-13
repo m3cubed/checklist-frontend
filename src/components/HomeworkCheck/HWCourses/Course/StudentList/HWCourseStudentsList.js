@@ -423,6 +423,7 @@ class HWCourseStudentsList extends Component {
 						student: whichStudent,
 					})}
 					onTouchEnd={this.handleMouseRelease}
+					onTouchMove={this.handleMouseRelease}
 					justify="center"
 					alignItems="center"
 				>
@@ -577,7 +578,8 @@ class HWCourseStudentsList extends Component {
 		}
 	};
 
-	handleMouseRelease = () => {
+	handleMouseRelease = e => {
+		e.preventDefault();
 		clearTimeout(this.menuPressTimer);
 	};
 
