@@ -486,7 +486,7 @@ class HWCourseStudentsList extends Component {
 				this.props.dispatch(handleUpdateHWStudent(student));
 			}
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 		} finally {
 			setTimeout(() => {
 				this.setState({
@@ -686,29 +686,31 @@ class HWCourseStudentsList extends Component {
 											}}
 										>
 											<AutoSizer>
-												{({ height, width }) => (
-													<VGrid
-														ref={this._setHWHeaderRef}
-														className={classes.hwHeaderContainer}
-														cellRenderer={this._renderHWHeaderCell}
-														columnCount={Math.max(
-															this.state.homeworks[0].length,
-															Math.ceil(width / this.state.bodyColWidth),
-														)}
-														columnWidth={this.state.bodyColWidth}
-														rowCount={1}
-														rowHeight={height}
-														height={height}
-														width={width - scrollbarSize()}
-														overscanColumnCount={7}
-														overscanRowCount={7}
-														scrollLeft={scrollLeft}
-														containerStyle={{
-															pointerEvents: "auto",
-															overflow: "hidden hidden",
-														}}
-													/>
-												)}
+												{({ height, width }) => {
+													return (
+														<VGrid
+															ref={this._setHWHeaderRef}
+															className={classes.hwHeaderContainer}
+															cellRenderer={this._renderHWHeaderCell}
+															columnCount={Math.max(
+																this.state.homeworksColLength + 1,
+																Math.ceil(width / this.state.bodyColWidth),
+															)}
+															columnWidth={this.state.bodyColWidth}
+															rowCount={1}
+															rowHeight={height}
+															height={height}
+															width={width - scrollbarSize()}
+															overscanColumnCount={7}
+															overscanRowCount={7}
+															scrollLeft={scrollLeft}
+															containerStyle={{
+																pointerEvents: "auto",
+																overflow: "hidden hidden",
+															}}
+														/>
+													);
+												}}
 											</AutoSizer>
 										</Paper>
 									</Grid>
@@ -757,7 +759,7 @@ class HWCourseStudentsList extends Component {
 														ref={this._setStudentBodyRef}
 														cellRenderer={this._renderStudentBodyCell}
 														columnCount={Math.max(
-															this.state.homeworks[0].length,
+															this.state.homeworksColLength + 1,
 															Math.ceil(width / this.state.bodyColWidth),
 														)}
 														columnWidth={this.state.bodyColWidth}

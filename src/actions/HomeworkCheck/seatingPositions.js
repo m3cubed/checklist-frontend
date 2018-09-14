@@ -31,7 +31,7 @@ export function loadDefaultSeatingPositions(courseID, resolve, reject) {
 			}, {});
 			seatingPositions = temp;
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 		}
 
 		fetch(`${CONNECTION}/seating_positions/retrieve`, {

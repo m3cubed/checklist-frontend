@@ -8,28 +8,28 @@ export const UPDATE_HW_COURSE = "UPDATE_HW_COURSE";
 export function loadHWCourses(courses) {
 	return {
 		type: LOAD_HW_COURSES,
-		courses
+		courses,
 	};
 }
 
 export function addHWCourse(course) {
 	return {
 		type: ADD_HW_COURSE,
-		course
+		course,
 	};
 }
 
 function removeHWCourse(id) {
 	return {
 		type: REMOVE_HW_COURSE,
-		id
+		id,
 	};
 }
 
 function updateHWCourse(course) {
 	return {
 		type: UPDATE_HW_COURSE,
-		course
+		course,
 	};
 }
 
@@ -41,9 +41,9 @@ export function loadDefaultHWCourses(resolve, reject) {
 			method: "PUT",
 			credentials: "include",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ creatorID: authUser.id })
+			body: JSON.stringify({ creatorID: authUser.id }),
 		})
 			.then(res => res.json())
 			.then(json => {
@@ -52,13 +52,13 @@ export function loadDefaultHWCourses(resolve, reject) {
 					try {
 						resolve();
 					} catch (err) {
-						console.log(err);
+						// console.log(err);
 					}
 				} else {
 					try {
 						reject();
 					} catch (err) {
-						console.log(err);
+						// console.log(err);
 					}
 				}
 			});
@@ -71,9 +71,9 @@ export function handleDeleteHWCourse(id) {
 			method: "PUT",
 			credentials: "include",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ id })
+			body: JSON.stringify({ id }),
 		})
 			.then(res => res.json())
 			.then(json => {
@@ -93,9 +93,9 @@ export function handleAddHWCourse(course) {
 			method: "POST",
 			credentials: "include",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ course })
+			body: JSON.stringify({ course }),
 		})
 			.then(res => res.json())
 			.then(json => {
@@ -112,9 +112,9 @@ export function handleUpdateHWCourse(course) {
 			method: "PUT",
 			credentials: "include",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ course })
+			body: JSON.stringify({ course }),
 		})
 			.then(res => res.json())
 			.then(json => {

@@ -78,7 +78,7 @@ export function loadDefaultStudentStatus(courseID, resolve, reject) {
 			}, {});
 			studentHWStatus = temp;
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 		}
 
 		fetch(`${CONNECTION}/student_homework_status/retrieve`, {

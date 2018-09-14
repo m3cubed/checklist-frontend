@@ -48,16 +48,7 @@ const searchStudents = props => {
 };
 
 class HWCourseUnitTabs extends Component {
-	// static getDerivedStateFromProps(nextProps, state) {
-	// 	if (!state.value && nextProps) {
-	// 		return {
-	// 			value: Object.keys(nextProps.hwUnits)[0],
-	// 		};
-	// 	}
-	// 	return null;
-	// }
 	state = {
-		value: Object.keys(this.props.hwUnits)[0],
 		openUnitMenu: false,
 		unitAnchorEl: null,
 		targetUnit: null,
@@ -69,17 +60,25 @@ class HWCourseUnitTabs extends Component {
 			this.props.hwUnits !== prevProps.hwUnits
 		) {
 			const newUnit = Object.keys(this.props.hwUnits)[0];
-			this.setState({
-				value: newUnit,
-			});
 			this.props.dispatch(changeUnit(newUnit));
+		} else if (
+			Object.keys(this.props.hwUnits).length === 0 &&
+			this.props.hwUnits !== prevProps.hwUnits
+		) {
+			this.props.dispatch(changeUnit(""));
 		}
 	}
 
 	componentDidMount() {
 		const units = Object.keys(this.props.hwUnits);
-		this.props.toggleUnitID(units[0]);
-		this.props.dispatch(changeUnit(units[0]));
+		if (units.length > 0) {
+			this.props.toggleUnitID(units[0]);
+			this.props.dispatch(changeUnit(units[0]));
+		}
+	}
+
+	componentWillUnmount() {
+		this.props.dispatch(changeUnit(""));
 	}
 
 	mountTable(unitID) {
@@ -132,7 +131,6 @@ class HWCourseUnitTabs extends Component {
 
 	render() {
 		const { hwUnits, classes } = this.props;
-		// if (!this.state.value) return null;
 
 		return (
 			<Grid container spocing={0} className={classes.root} justify="center">
@@ -149,7 +147,7 @@ class HWCourseUnitTabs extends Component {
 						<Grid container alignItems="center">
 							<Grid item xs="auto">
 								<Tabs
-									value={this.state.value}
+									value={this.props.currentUnit}
 									onChange={this.handleTabValue}
 									indicatorColor="primary"
 									textColor="primary"
@@ -179,12 +177,12 @@ class HWCourseUnitTabs extends Component {
 				</Grid>
 				<Grid item xs={11}>
 					<div className={classes.gridContainer}>
-						{this.state.value ? (
+						{this.props.currentUnit !== "" ? (
 							<Grid container spacing={8} justify="center" alignItems="center">
 								<Grid item xs={12}>
 									{this.props.studentHWStatus === null ? null : (
 										<div style={{ height: 500 }}>
-											{this.mountTable(this.state.value)}
+											{this.mountTable(this.props.currentUnit)}
 										</div>
 									)}
 								</Grid>
