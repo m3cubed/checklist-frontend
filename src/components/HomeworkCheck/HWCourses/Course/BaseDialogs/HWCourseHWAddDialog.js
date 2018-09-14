@@ -15,41 +15,51 @@ import { handleAddHomework } from "../../../../../actions/HomeworkCheck/homework
 
 const styles = theme => ({
 	root: {
-		flexGrow: 1
+		flexGrow: 1,
 	},
 	tabsPaper: {
-		color: theme.palette.primary
-	}
+		color: theme.palette.primary,
+	},
 });
 
 class HWCourseHWAddDialog extends Component {
 	close = this.props.toggle("hw");
 
 	state = {
-		unitID: this.props.unitID,
-		homeworkTitle: "",
-		submitDate: "",
-		courseID: this.props.courseID
+		homework: {
+			unitID: this.props.unitID,
+			homeworkTitle: "",
+			submitDate: "",
+			courseID: this.props.courseID,
+		},
+		plus: false,
 	};
 
 	componentDidUpdate(prevState) {
 		if (prevState.unitID !== this.props.unitID) {
 			this.setState({
-				unitID: this.props.unitID
+				unitID: this.props.unitID,
 			});
 		}
 	}
 
 	handleValue = e => {
 		this.setState({
-			[e.target.id]: e.target.value
+			homework: {
+				...this.state.homework,
+				[e.target.id]: e.target.value,
+			},
 		});
 	};
 
 	handleSubmit = e => {
 		e.preventDefault();
-		this.close();
-		this.props.dispatch(handleAddHomework(this.state));
+		console.log(this.state.homework);
+		if (!this.state.plus) {
+			this.close();
+		}
+		this.setState({ plus: false });
+		this.props.dispatch(handleAddHomework(this.state.homework));
 	};
 
 	render() {
@@ -65,7 +75,7 @@ class HWCourseHWAddDialog extends Component {
 									required
 									label="Title"
 									id="homeworkTitle"
-									value={this.state.firstName}
+									// value={this.state.homework.homeworkTitle}
 									onChange={this.handleValue}
 									fullWidth
 								/>
@@ -84,10 +94,10 @@ class HWCourseHWAddDialog extends Component {
 									label="Submit Date"
 									id="submitDate"
 									type="date"
-									value={this.state.lastName}
+									// value={this.state.homework.submitDate}
 									onChange={this.handleValue}
 									InputLabelProps={{
-										shrink: true
+										shrink: true,
 									}}
 									fullWidth
 								/>
@@ -96,7 +106,13 @@ class HWCourseHWAddDialog extends Component {
 					</DialogContent>
 					<DialogActions>
 						<Button onClick={this.close}>Cancel</Button>
-						<Button color="primary">Add+</Button>
+						<Button
+							color="primary"
+							onClick={() => this.setState({ plus: true })}
+							type="submit"
+						>
+							Add+
+						</Button>
 						<Button color="primary" type="submit">
 							Add
 						</Button>
@@ -109,5 +125,5 @@ class HWCourseHWAddDialog extends Component {
 
 export default compose(
 	withStyles(styles),
-	connect()
+	connect(),
 )(HWCourseHWAddDialog);
