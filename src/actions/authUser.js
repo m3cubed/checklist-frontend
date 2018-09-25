@@ -3,6 +3,7 @@ import { updateUser } from "./users";
 import { loadDefaultTemplates } from "./templates";
 import { loadDefaultCourses } from "./courses";
 import { loadDefaultPolls } from "./polls";
+import { loadDefaultCollaborations } from "./courseCollaborations";
 
 export const AUTH_USER = "AUTH_USER";
 export const LOGIN_USER = "LOGIN_USER";
@@ -17,20 +18,20 @@ export const LOGOUT_USER = "LOGOUT_USER";
 export function authUser(id) {
 	return {
 		type: AUTH_USER,
-		id
+		id,
 	};
 }
 
 export function logoutUser() {
 	return {
-		type: LOGOUT_USER
+		type: LOGOUT_USER,
 	};
 }
 
 export function loginUser(user) {
 	return {
 		type: LOGIN_USER,
-		user
+		user,
 	};
 }
 
@@ -38,35 +39,35 @@ export function addUserTemplate(templateID, length) {
 	return {
 		type: ADD_USER_TEMPLATE,
 		templateID,
-		length
+		length,
 	};
 }
 
 export function deleteUserTemplate(templateID) {
 	return {
 		type: DELETE_USER_TEMPLATE,
-		templateID
+		templateID,
 	};
 }
 
 export function addUserCourse(courseID) {
 	return {
 		type: ADD_USER_COURSE,
-		courseID
+		courseID,
 	};
 }
 
 export function deleteUserCourse(courseID) {
 	return {
 		type: DELETE_USER_COURSE,
-		courseID
+		courseID,
 	};
 }
 
 export function requestCourseEntry(courseID) {
 	return {
 		type: REQUEST_COURSE_ENTRY,
-		courseID
+		courseID,
 	};
 }
 
@@ -74,7 +75,7 @@ export function addPollsResponse(pollID, responseID) {
 	return {
 		type: ADD_POLLS_RESPONSE,
 		pollID,
-		responseID
+		responseID,
 	};
 }
 
@@ -91,9 +92,9 @@ export function handleChangeUser(user, resolve, reject) {
 					method: "POST",
 					credentials: "include",
 					headers: {
-						"Content-Type": "application/json"
+						"Content-Type": "application/json",
 					},
-					body: JSON.stringify({ id: user.id })
+					body: JSON.stringify({ id: user.id }),
 				})
 					.then(res => res.json())
 					.then(json => {
@@ -108,6 +109,7 @@ export function handleChangeUser(user, resolve, reject) {
 							dispatch(loadDefaultTemplates(json.templates));
 							dispatch(loadDefaultCourses(json.courses));
 							dispatch(loadDefaultPolls(json.polls));
+							dispatch(loadDefaultCollaborations(json.collaborations));
 							resolve();
 						}
 					});
@@ -119,9 +121,9 @@ export function handleChangeUser(user, resolve, reject) {
 					method: "POST",
 					credentials: "include",
 					headers: {
-						"Content-Type": "application/json"
+						"Content-Type": "application/json",
 					},
-					body: JSON.stringify({ id: user.id })
+					body: JSON.stringify({ id: user.id }),
 				})
 					.then(res => res.json())
 					.then(json => {
@@ -136,6 +138,7 @@ export function handleChangeUser(user, resolve, reject) {
 							dispatch(loadDefaultTemplates(json.templates));
 							dispatch(loadDefaultCourses(json.courses));
 							dispatch(loadDefaultPolls(json.polls));
+							dispatch(loadDefaultCollaborations(json.collaborations));
 							resolve();
 						}
 					});
@@ -147,12 +150,12 @@ export function handleChangeUser(user, resolve, reject) {
 					method: "POST",
 					credentials: "include",
 					headers: {
-						"Content-Type": "application/json"
+						"Content-Type": "application/json",
 					},
 					body: JSON.stringify({
 						pollIDs: Object.keys(user.todoPolls),
-						courseIDs: Object.keys(user.courseIDs)
-					})
+						courseIDs: Object.keys(user.courseIDs),
+					}),
 				})
 					.then(res => res.json())
 					.then(json => {
@@ -184,12 +187,12 @@ export function handleAddPollsResponse(pollIDs, resolve, reject) {
 					method: "POST",
 					credentials: "include",
 					headers: {
-						"Content-Type": "application/json"
+						"Content-Type": "application/json",
 					},
 					body: JSON.stringify({
 						pollID,
-						creatorID: authUser.id
-					})
+						creatorID: authUser.id,
+					}),
 				})
 					.then(res => res.json())
 					.then(json => {

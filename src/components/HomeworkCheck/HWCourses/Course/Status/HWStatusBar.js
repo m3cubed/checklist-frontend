@@ -7,37 +7,61 @@ import Paper from "@material-ui/core/Paper";
 import Chip from "@material-ui/core/Chip";
 import Avatar from "@material-ui/core/Avatar";
 import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 //Icons
 import AddIcon from "@material-ui/icons/Add";
+
+const styles = theme => ({
+	root: {
+		flexGrow: 1,
+	},
+	statusContainer: {
+		height: 30,
+		border: "1px solid transparent",
+		borderRadius: 5,
+		display: "flex",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+});
 
 class HWStatusBar extends Component {
 	state = {};
 	render() {
-		const { hwStatus } = this.props;
+		const { hwStatus, classes } = this.props;
 		return (
-			<Paper>
-				<Grid container alignItems="center" justify="flex-start">
-					{Object.keys(hwStatus).map(item => (
-						<Chip
-							key={item}
-							label={hwStatus[item].statusTitle}
+			<Paper className={classes.root}>
+				<Grid container alignItems="center" justify="center">
+					{Object.keys(hwStatus).map((status, index) => (
+						<Grid
+							key={status}
+							item
+							xs={11}
+							className={classes.statusContainer}
 							style={{
-								backgroundColor: hwStatus[item].color,
-								width: 100,
-								margin: 5
+								backgroundColor: hwStatus[status]
+									? hwStatus[status].color
+									: "inherit",
+								margin: 3,
+								marginTop: index === 0 ? 6 : 3,
 							}}
-						/>
+						>
+							<Typography>{status}</Typography>
+						</Grid>
 					))}
-					<Chip
-						key="add"
-						label="Add a Status"
-						onClick={this.props.add}
-						avatar={
-							<Avatar>
-								<AddIcon />
-							</Avatar>
-						}
-					/>
+					<Grid item xs={11} align="center">
+						<Chip
+							key="add"
+							label="Add"
+							style={{ marginTop: 5, marginBottom: 8 }}
+							onClick={this.props.add}
+							avatar={
+								<Avatar>
+									<AddIcon />
+								</Avatar>
+							}
+						/>
+					</Grid>
 				</Grid>
 			</Paper>
 		);
@@ -46,8 +70,11 @@ class HWStatusBar extends Component {
 
 function mapStateToProps({ hwStatus }) {
 	return {
-		hwStatus
+		hwStatus,
 	};
 }
 
-export default connect(mapStateToProps)(HWStatusBar);
+export default compose(
+	withStyles(styles),
+	connect(mapStateToProps),
+)(HWStatusBar);

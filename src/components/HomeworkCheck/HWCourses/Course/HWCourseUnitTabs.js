@@ -24,7 +24,6 @@ const styles = theme => ({
 	root: {
 		flexGrow: 1,
 		height: 700,
-		marginTop: 30,
 	},
 	unitBar: {
 		position: "static",
@@ -89,6 +88,7 @@ class HWCourseUnitTabs extends Component {
 						unitID={unitID}
 						courseID={this.props.courseID}
 						toggleAddHW={this.props.toggleHWDialogOpen}
+						toggleAddStudent={this.props.toggleStudentDialogOpen}
 					/>
 				);
 			}
@@ -142,7 +142,7 @@ class HWCourseUnitTabs extends Component {
 						target={this.state.targetUnit}
 					/>
 				) : null}
-				<Grid item xs={11}>
+				<Grid item xs={12}>
 					<AppBar className={classes.unitBar} color="default">
 						<Grid container alignItems="center">
 							<Grid item xs="auto">
@@ -175,15 +175,15 @@ class HWCourseUnitTabs extends Component {
 						</Grid>
 					</AppBar>
 				</Grid>
-				<Grid item xs={11}>
+				<Grid item xs={12}>
 					<div className={classes.gridContainer}>
 						{this.props.currentUnit !== "" ? (
 							<Grid container spacing={8} justify="center" alignItems="center">
 								<Grid item xs={12}>
 									{this.props.studentHWStatus === null ? null : (
-										<div style={{ height: 500 }}>
+										<Paper style={{ height: 600 }}>
 											{this.mountTable(this.props.currentUnit)}
-										</div>
+										</Paper>
 									)}
 								</Grid>
 							</Grid>

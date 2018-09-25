@@ -3,6 +3,7 @@ import compose from "recompose/compose";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 //Accessories
+import Paper from "@material-ui/core/Paper";
 import MenuList from "@material-ui/core/MenuList";
 import MenuItem from "@material-ui/core/MenuItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -27,7 +28,7 @@ class SeatingViewHWList extends Component {
 		const keys = Object.keys(homeworks);
 
 		return (
-			<div>
+			<Paper style={{ height: 625 }}>
 				<MenuList>
 					{keys.length > 0 ? (
 						keys.map(homework => (
@@ -46,7 +47,7 @@ class SeatingViewHWList extends Component {
 						</MenuItem>
 					)}
 				</MenuList>
-			</div>
+			</Paper>
 		);
 	}
 }

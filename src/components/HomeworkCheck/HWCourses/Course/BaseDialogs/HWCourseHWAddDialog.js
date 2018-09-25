@@ -54,7 +54,6 @@ class HWCourseHWAddDialog extends Component {
 
 	handleSubmit = e => {
 		e.preventDefault();
-		console.log(this.state.homework);
 		if (!this.state.plus) {
 			this.close();
 		}

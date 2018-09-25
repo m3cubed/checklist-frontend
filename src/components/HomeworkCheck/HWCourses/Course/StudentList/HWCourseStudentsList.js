@@ -27,6 +27,7 @@ import {
 } from "../../../../../actions/HomeworkCheck/studentHWStatus";
 import ListStudentMenu from "../Menus/ListStudentMenu";
 import { handleUpdateHWStudent } from "../../../../../actions/HomeworkCheck/hwStudents";
+import { handleUpdateHomework } from "../../../../../actions/HomeworkCheck/homeworks";
 
 const styles = theme => ({
 	root: {
@@ -80,6 +81,9 @@ const styles = theme => ({
 	},
 	editInput: {
 		textAlign: "center",
+	},
+	editRoot: {
+		fontSize: "14px",
 	},
 });
 
@@ -239,6 +243,7 @@ class HWCourseStudentsList extends Component {
 	}
 
 	_renderHWHeaderCell({ columnIndex, key, rowIndex, style }) {
+		//Add button
 		if (this.state.homeworksColLength === columnIndex) {
 			return (
 				<Grid
@@ -266,13 +271,48 @@ class HWCourseStudentsList extends Component {
 				</Grid>
 			);
 		}
-
+		//If no homework
 		if (this.state.homeworks[rowIndex][columnIndex] === undefined) {
 			return (
 				<div key={key} style={style} className={this.props.classes.topRow} />
 			);
 		} else {
 			const homework = this.state.homeworks[rowIndex][columnIndex];
+
+			if (
+				this.state.hwEdit !== null &&
+				homework[2] === this.state.hwEdit[0] &&
+				columnIndex === this.state.hwEdit[1]
+			) {
+				return (
+					<Grid
+						container
+						className={this.props.classes.topRow}
+						key={key}
+						style={{
+							...style,
+							backgroundColor: rowIndex % 2 === 1 ? "#f5f5f5" : "none",
+						}}
+						justify="center"
+						alignItems="center"
+					>
+						<ClickAwayListener onClickAway={this.handleHWUpdate}>
+							<Input
+								fullWidth
+								autoFocus
+								classes={{
+									root: this.props.classes.editRoot,
+									input: this.props.classes.editInput,
+								}}
+								defaultValue={this.state.hwEdit[2]}
+								onChange={this.handleHWEdit}
+								onKeyPress={this.handleHWUpdate}
+							/>
+						</ClickAwayListener>
+					</Grid>
+				);
+			}
+
 			return (
 				<Grid
 					container
@@ -281,6 +321,11 @@ class HWCourseStudentsList extends Component {
 					style={style}
 					className={this.props.classes.topRow}
 					aria-owns={this.state.anchorEl ? "HW_header_menu" : null}
+					onDoubleClick={this.toggleHWEdit([
+						homework[2], //ID
+						columnIndex, //Which Column
+						homework[0], //Cell value
+					])}
 					onContextMenu={this.toggleHWMenu(homework[2])}
 					justify="center"
 					alignItems="center"
@@ -302,7 +347,42 @@ class HWCourseStudentsList extends Component {
 
 	_renderStudentColumnCell({ columnIndex, key, rowIndex, style }) {
 		const student = this.state.students[rowIndex];
-
+		//Add button
+		if (rowIndex === this.state.studentsRowLength && columnIndex === 1) {
+			return (
+				<Grid
+					container
+					key={key}
+					style={{
+						...style,
+						backgroundColor: rowIndex % 2 === 1 ? "#f5f5f5" : "none",
+					}}
+					className={
+						columnIndex === 0
+							? this.props.classes.studentColLeft
+							: this.props.classes.studentCol
+					}
+					justify="center"
+					alignItems="center"
+				>
+					<Button
+						variant="contained"
+						color="primary"
+						size="small"
+						onClick={this.props.toggleAddStudent}
+						style={{
+							paddingTop: 6,
+							paddingBottom: 6,
+							paddingLeft: 7,
+							paddingRight: 7,
+						}}
+					>
+						<AddIcon />
+					</Button>
+				</Grid>
+			);
+		}
+		//If no student
 		if (student === undefined) {
 			return (
 				<div
@@ -319,8 +399,9 @@ class HWCourseStudentsList extends Component {
 				/>
 			);
 		}
+		//If editting
 		if (
-			this.state.studentEdit &&
+			this.state.studentEdit !== null &&
 			student[2] === this.state.studentEdit[0] &&
 			columnIndex === this.state.studentEdit[1]
 		) {
@@ -344,14 +425,18 @@ class HWCourseStudentsList extends Component {
 						<Input
 							fullWidth
 							autoFocus
-							classes={{ input: this.props.classes.editInput }}
+							classes={{
+								input: this.props.classes.editInput,
+							}}
 							defaultValue={this.state.studentEdit[2]}
 							onChange={this.handleStudentEdit}
+							onKeyPress={this.handleStudentUpdate}
 						/>
 					</ClickAwayListener>
 				</Grid>
 			);
 		}
+		//Regular Output
 		return (
 			<Grid
 				container
@@ -368,9 +453,9 @@ class HWCourseStudentsList extends Component {
 				justify="center"
 				alignItems="center"
 				onDoubleClick={this.toggleStudentEdit([
-					student[2],
-					columnIndex,
-					student[columnIndex],
+					student[2], //ID
+					columnIndex, //Which column
+					student[columnIndex], //Cell Value
 				])}
 				onContextMenu={this.toggleStudentMenu(student[2])}
 			>
@@ -455,15 +540,34 @@ class HWCourseStudentsList extends Component {
 		});
 	};
 
+	handleHWEdit = e => {
+		const { hwEdit } = this.state;
+		hwEdit[2] = e.target.value;
+		this.setState({
+			hwEdit,
+		});
+	};
+
 	toggleStudentEdit = target => () => {
 		this.setState({
 			studentEdit: target,
 		});
 	};
 
-	handleStudentUpdate = () => {
+	toggleHWEdit = target => () => {
+		this.setState({
+			hwEdit: target,
+		});
+	};
+
+	handleStudentUpdate = e => {
 		const { studentEdit } = this.state;
 		const original = this.props.hwStudents[studentEdit[0]];
+
+		if (e.key && e.key !== "Enter") {
+			return null;
+		}
+
 		try {
 			if (
 				studentEdit[2] !== original.firstName &&
@@ -491,6 +595,31 @@ class HWCourseStudentsList extends Component {
 			setTimeout(() => {
 				this.setState({
 					studentEdit: null,
+				});
+			}, 200);
+		}
+	};
+
+	handleHWUpdate = e => {
+		const { hwEdit } = this.state;
+		const original = this.props.homeworks[hwEdit[0]];
+
+		if (e.key && e.key !== "Enter") {
+			return null;
+		}
+
+		try {
+			if (hwEdit[2] !== original.homeworkTitle) {
+				const homework = { id: hwEdit[0], homeworkTitle: hwEdit[2] };
+
+				this.props.dispatch(handleUpdateHomework(homework));
+			}
+		} catch (err) {
+			// console.log(err);
+		} finally {
+			setTimeout(() => {
+				this.setState({
+					hwEdit: null,
 				});
 			}, 200);
 		}
@@ -717,7 +846,7 @@ class HWCourseStudentsList extends Component {
 									<Grid item xs={5} md={2}>
 										<Paper
 											style={{
-												height: height - scrollbarSize(),
+												height: height - scrollbarSize() - 40,
 												zIndex: 2,
 												borderRadius: 0,
 												boxShadow:
@@ -733,11 +862,11 @@ class HWCourseStudentsList extends Component {
 														columnCount={2}
 														columnWidth={width / 2}
 														rowCount={Math.max(
-															this.state.students.length,
+															this.state.studentsRowLength + 1,
 															Math.ceil(height / this.state.bodyRowHeight),
 														)}
 														rowHeight={this.state.bodyRowHeight}
-														height={height - scrollbarSize()}
+														height={height}
 														width={width}
 														overscanColumnCount={7}
 														overscanRowCount={7}
@@ -752,7 +881,7 @@ class HWCourseStudentsList extends Component {
 										</Paper>
 									</Grid>
 									<Grid item xs={7} md={10}>
-										<div style={{ height: height }}>
+										<div style={{ height: height - 40 }}>
 											<AutoSizer>
 												{({ height, width }) => (
 													<VGrid
@@ -764,7 +893,7 @@ class HWCourseStudentsList extends Component {
 														)}
 														columnWidth={this.state.bodyColWidth}
 														rowCount={Math.max(
-															this.state.students.length,
+															this.state.studentsRowLength + 1,
 															Math.ceil(height / this.state.bodyRowHeight),
 														)}
 														rowHeight={this.state.bodyRowHeight}

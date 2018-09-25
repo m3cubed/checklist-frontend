@@ -8,14 +8,14 @@ export const ADD_COURSE_TO_STUDENT = "ADD_COURSE_TO_STUDENT";
 export function loadDefaultUsers(users) {
 	return {
 		type: LOAD_DEFAULT_USER,
-		users
+		users,
 	};
 }
 
 export function updateUser(authUser) {
 	return {
 		type: UPDATE_USER_FROM_AUTHUSER,
-		authUser
+		authUser,
 	};
 }
 
@@ -23,6 +23,6 @@ export function updateRequestCourseEntry(courseID, studentID) {
 	return {
 		type: UPDATE_REQUEST_COURSE_ENTRY,
 		courseID,
-		studentID
+		studentID,
 	};
 }

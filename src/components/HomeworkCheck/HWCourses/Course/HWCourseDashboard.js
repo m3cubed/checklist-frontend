@@ -31,6 +31,7 @@ import HWCourseUnitAddDialog from "./BaseDialogs/HWCourseUnitAddDialog";
 import HWStatusAddDialog from "./Status/HWStatusAddDialog";
 import HWCourseUnitTabs from "./HWCourseUnitTabs";
 import HWStatusBar from "./Status/HWStatusBar";
+import HWCourseCollaborateDialog from "./BaseDialogs/HWCourseCollaborateDialog";
 //Redux
 import { loadDefaultStudentStatus } from "../../../../actions/HomeworkCheck/studentHWStatus";
 import { changeNavbarTitle } from "../../../../actions/navbar";
@@ -38,6 +39,10 @@ import { loadDefaultHWCourses } from "../../../../actions/HomeworkCheck/hwCourse
 import { changeViewState } from "../../../../actions/PageStates/page_hwCheckCourse";
 import HWImportMain from "./Importing/HWImportMain";
 import { loadDefaultSeatingPositions } from "../../../../actions/HomeworkCheck/seatingPositions";
+import {
+	loadDefaultCollaborators,
+	loadCollaborators,
+} from "../../../../actions/HomeworkCheck/collaborate";
 
 const styles = theme => ({
 	root: {
@@ -60,6 +65,7 @@ const HWCourseDashboard = props => {
 				{ action: loadDefaultHWStatus, condition: id },
 				{ action: loadDefaultHomeworks, condition: id },
 				{ action: loadDefaultHWCourses },
+				{ action: loadDefaultCollaborators, condition: id },
 			],
 			[
 				{ action: loadDefaultStudentStatus, condition: id },
@@ -92,6 +98,7 @@ class RenderDashBoard extends Component {
 		this.props.dispatch(loadHWStatus(null));
 		this.props.dispatch(loadHomeworks(null));
 		this.props.dispatch(loadHWStatus(null));
+		this.props.dispatch(loadCollaborators(null));
 	}
 	state = {
 		studentDialog: false,
@@ -124,7 +131,7 @@ class RenderDashBoard extends Component {
 		const { classes } = this.props;
 
 		return (
-			<Paper className={classes.root}>
+			<div className={classes.root}>
 				{this.state.studentDialog ? (
 					<HWCourseStudentAddDialog
 						open={this.state.studentDialog}
@@ -152,25 +159,25 @@ class RenderDashBoard extends Component {
 					courseID={id}
 				/>
 
+				<HWCourseCollaborateDialog courseID={id} />
+
 				<HWImportMain courseID={id} />
 
-				<Grid container spacing={0}>
-					<Grid item xs={12}>
+				<Grid container spacing={8}>
+					<Grid item xs={1}>
 						<HWStatusBar add={this.toggleDialogOpen("status")} />
 					</Grid>
-					<Grid item xs={12} style={{ height: 700 }}>
+					<Grid container item xs={11} style={{ height: 700 }} spacing={0}>
 						<HWCourseUnitTabs
 							toggleHWDialogOpen={this.toggleDialogOpen("hw")}
 							toggleUnitDialogOpen={this.toggleDialogOpen("unit")}
+							toggleStudentDialogOpen={this.toggleDialogOpen("student")}
 							toggleUnitID={this.toggleUnitID}
 							courseID={id}
 						/>
 					</Grid>
 				</Grid>
-				<Button onClick={this.toggleDialogOpen("student")}>
-					Add a Student
-				</Button>
-			</Paper>
+			</div>
 		);
 	}
 }

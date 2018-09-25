@@ -1,21 +1,22 @@
-import React from "react";
+import React, { PureComponent } from "react";
 import compose from "recompose/compose";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { ItemTypes } from "./ItemTypes";
 import { DragSource } from "react-dnd";
+import { getEmptyImage } from "react-dnd-html5-backend";
+import throttle from "react-throttle-render";
 //Accessories
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 //Icons
 import PersonIcon from "@material-ui/icons/Person";
+//Redux
 import { updateStudentStatus } from "../../../../../actions/HomeworkCheck/studentHWStatus";
 
 const height = 100;
-const width = 80;
+const width = height * 0.8;
 
 function collect(connect, monitor) {
 	return {
@@ -35,7 +36,7 @@ const gridSource = {
 const styles = theme => ({
 	grabDiv: {
 		height: 10,
-		width: "70%",
+		width: "100%",
 		backgroundColor: "#eeeeee",
 		margin: "auto",
 		marginBottom: 5,
@@ -45,29 +46,28 @@ const styles = theme => ({
 				cursor: "grabbing",
 			},
 		},
+		borderTopLeftRadius: 4,
+		borderTopRightRadius: 4,
 	},
 });
 
-const SeatingViewStudentCard = props => {
-	const {
-		classes,
-		status,
-		color,
-		homework,
-		connectDragSource,
-		connectDragPreview,
-		isDragging,
-		id,
-		top,
-		left,
-		firstName,
-		lastName,
-		gender,
-		location,
-	} = props;
+class SeatingViewStudentCard extends PureComponent {
+	componentDidMount() {
+		const { connectDragPreview } = this.props;
+		if (connectDragPreview) {
+			// Use empty image as a drag preview so browsers don't draw it
+			// and we can draw whatever we want on the custom drag layer instead.
+			connectDragPreview(getEmptyImage(), {
+				// IE fallback: specify that we'd rather screenshot the node
+				// when it already knows it's being dragged so we can hide it with CSS.
+				captureDraggingState: true,
+			});
+		}
+	}
 
-	function handleCardClick() {
-		if (props.homework !== "") {
+	handleCardClick() {
+		const { homework, id, status, dispatch } = this.props;
+		if (homework !== "") {
 			let newStatus;
 			switch (status) {
 				case "Complete": {
@@ -81,46 +81,65 @@ const SeatingViewStudentCard = props => {
 				default:
 					newStatus = "Complete";
 			}
-			props.dispatch(updateStudentStatus(homework, id, newStatus));
+			dispatch(updateStudentStatus(homework, id, newStatus));
 		}
 	}
 
-	return connectDragPreview(
-		<div
-			style={{
-				position: location == "container" ? "absolute" : null,
-				height,
-				width,
-				top: location === "container" ? top : null,
-				left: location === "container" ? left : null,
-			}}
-		>
-			<Paper
-				style={{ height, width, backgroundColor: color }}
-				onClick={handleCardClick}
-				onContextMenu={props.onContextMenu}
+	render() {
+		const {
+			classes,
+			status,
+			color,
+			homework,
+			connectDragSource,
+			connectDragPreview,
+			isDragging,
+			id,
+			top,
+			left,
+			firstName,
+			lastName,
+			gender,
+			location,
+		} = this.props;
+
+		return (
+			<div
+				style={{
+					position: location == "container" ? "absolute" : null,
+					height,
+					width,
+					top: location === "container" ? top : null,
+					left: location === "container" ? left : null,
+				}}
 			>
-				{connectDragSource(<div className={props.classes.grabDiv} />)}
+				<Paper
+					style={{ height, width, backgroundColor: color }}
+					onClick={this.handleCardClick.bind(this)}
+					onContextMenu={this.props.onContextMenu}
+				>
+					{connectDragSource(<div className={classes.grabDiv} />)}
 
-				<Grid container spacing={0} justify="center" alignItems="center">
-					<Grid item xs={12} align="center">
-						<Typography variant="display1">
-							<PersonIcon fontSize="inherit" />
-						</Typography>
-					</Grid>
+					<Grid container spacing={0} justify="center" alignItems="center">
+						<Grid item xs={12} align="center">
+							<Typography variant="display1">
+								<PersonIcon fontSize="inherit" />
+							</Typography>
+						</Grid>
 
-					<Grid item align="center" xs={12}>
-						<Typography>{firstName}</Typography>
-					</Grid>
+						<Grid item align="center" xs={12}>
+							<Typography>{firstName}</Typography>
+						</Grid>
 
-					<Grid item xs={12}>
-						<Typography align="center">{lastName}</Typography>
+						<Grid item xs={12}>
+							<Typography align="center">{lastName}</Typography>
+						</Grid>
 					</Grid>
-				</Grid>
-			</Paper>
-		</div>,
-	);
-};
+				</Paper>
+			</div>
+		);
+	}
+}
 
 function mapStateToProps(
 	{ hwStatus, studentHWStatus, page_hwCheckCourse },

@@ -10,28 +10,28 @@ export const UPDATE_HOMEWORK = "UPDATE_HOMEWORK";
 export function loadHomeworks(homeworks) {
 	return {
 		type: LOAD_HOMEWORKS,
-		homeworks
+		homeworks,
 	};
 }
 
 function addHomework(homework) {
 	return {
 		type: ADD_HOMEWORK,
-		homework
+		homework,
 	};
 }
 
 function deleteHomework(id) {
 	return {
 		type: DELETE_HOMEWORK,
-		id
+		id,
 	};
 }
 
 function updateHomework(homework) {
 	return {
 		type: UPDATE_HOMEWORK,
-		homework
+		homework,
 	};
 }
 
@@ -42,16 +42,16 @@ export function handleAddHomework(homework) {
 			homework.homeworkTitle,
 			homeworks,
 			"homeworkTitle",
-			["unitID", homework.unitID]
+			["unitID", homework.unitID],
 		);
 
 		fetch(`${CONNECTION}/homeworks/new`, {
 			method: "POST",
 			credentials: "include",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ homework })
+			body: JSON.stringify({ homework }),
 		})
 			.then(res => res.json())
 			.then(json => {
@@ -68,9 +68,9 @@ export function loadDefaultHomeworks(courseID, resolve, reject) {
 			method: "PUT",
 			credentials: "include",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ courseID })
+			body: JSON.stringify({ courseID }),
 		})
 			.then(res => res.json())
 			.then(json => {
@@ -84,15 +84,34 @@ export function loadDefaultHomeworks(courseID, resolve, reject) {
 	};
 }
 
+export function handleUpdateHomework(homework) {
+	return dispatch => {
+		fetch(`${CONNECTION}/homeworks/update`, {
+			method: "PUT",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ homework }),
+		})
+			.then(res => res.json())
+			.then(json => {
+				if (json.completed) {
+					dispatch(updateHomework(json.homework));
+				}
+			});
+	};
+}
+
 export function handleDeleteHomework(id) {
 	return dispatch => {
 		fetch(`${CONNECTION}/homeworks/delete`, {
 			method: "PUT",
 			credentials: "include",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ id })
+			body: JSON.stringify({ id }),
 		})
 			.then(res => res.json())
 			.then(json => {

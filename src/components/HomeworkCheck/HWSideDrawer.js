@@ -16,7 +16,9 @@ const HWSideDrawer = props => {
 					</ListItem>
 				</Link>
 			</List>
+
 			<Divider />
+
 			<List>
 				<Link to="classes">
 					<ListItem onClick={() => props.toggleDrawer()}>

@@ -20,6 +20,7 @@ import {
 	updateStudentStatus,
 	saveAllStatus,
 } from "../../../../../actions/HomeworkCheck/studentHWStatus";
+import SeatingViewCustomPreview from "./SeatingViewCustomPreview";
 
 const styles = theme => ({
 	root: {
@@ -55,8 +56,8 @@ const gridTarget = {
 		} else if (item.location === "container") {
 			component.moveGrids({
 				...item,
-				left: Math.floor(hMove / 5) * 5,
-				top: Math.floor(vMove / 5) * 5,
+				left: hMove,
+				top: vMove,
 			});
 		}
 	},
@@ -145,6 +146,7 @@ class SeatingViewContainer extends Component {
 					anchorEl={this.state.statusAnchorEl}
 					change={this.changeStudentStatus}
 				/>
+				<SeatingViewCustomPreview />
 				{connectDropTarget(
 					<div style={{ width: maxWidth }}>
 						<div

@@ -6,15 +6,22 @@ import { connect } from "react-redux";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Collapse from "@material-ui/core/Collapse";
 import Divider from "@material-ui/core/Divider";
 //Icons
+import ImportExportIcon from "@material-ui/icons/ImportExport";
+import PageviewIcon from "@material-ui/icons/Pageview";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import GroupWorkIcon from "@material-ui/icons/GroupWork";
+import PeopleIcon from "@material-ui/icons/People";
 //Redux
 import {
 	changeViewState,
 	toggleShowImport,
+	toggleCollaborateMenu,
 } from "../../../../actions/PageStates/page_hwCheckCourse";
 
 const styles = theme => ({
@@ -29,18 +36,13 @@ class HWCourseSideDrawer extends Component {
 	state = {
 		viewOpen: false,
 		addOpen: false,
+		collaborateOpen: false,
 	};
 
-	handleViewToggle = () => {
-		this.setState(state => ({
-			viewOpen: !state.viewOpen,
-		}));
-	};
-
-	handleAddToggle = () => {
-		this.setState(state => ({
-			addOpen: !state.addOpen,
-		}));
+	handleToggle = type => () => {
+		this.setState({
+			[type]: !this.state[type],
+		});
 	};
 
 	handleViewChange = view => () => {
@@ -53,14 +55,18 @@ class HWCourseSideDrawer extends Component {
 	};
 
 	render() {
-		const { classes } = this.props;
+		const { classes, dispatch } = this.props;
 		return (
 			<Fragment>
 				<List>
-					<ListItem button onClick={this.handleViewToggle}>
+					<ListItem button onClick={this.handleToggle("viewOpen")}>
+						<ListItemIcon>
+							<PageviewIcon />
+						</ListItemIcon>
 						<ListItemText>Views</ListItemText>
 						{this.state.viewOpen ? <ExpandLess /> : <ExpandMore />}
 					</ListItem>
+
 					<Collapse in={this.state.viewOpen} timeout="auto" unmountOnExit>
 						<List>
 							<ListItem
@@ -82,24 +88,67 @@ class HWCourseSideDrawer extends Component {
 							</ListItem>
 						</List>
 					</Collapse>
+
+					<Divider />
+
+					<ListItem button onClick={this.handleToggle("addOpen")}>
+						<ListItemIcon>
+							<ImportExportIcon />
+						</ListItemIcon>
+						<ListItemText>Import/Copy</ListItemText>
+						{this.state.addOpen ? <ExpandLess /> : <ExpandMore />}
+					</ListItem>
+
+					<Collapse in={this.state.addOpen} timeout="auto" unmountOnExit>
+						<List>
+							<ListItem
+								button
+								className={classes.nestedList}
+								onClick={this.toggleImport("students")}
+							>
+								<ListItemText>Students</ListItemText>
+							</ListItem>
+						</List>
+					</Collapse>
+
+					<Divider />
+
+					<ListItem button onClick={this.handleToggle("collaborateOpen")}>
+						<ListItemIcon>
+							<GroupWorkIcon />
+						</ListItemIcon>
+						<ListItemText>Collaborate</ListItemText>
+						{this.state.collaborateOpen ? <ExpandLess /> : <ExpandMore />}
+					</ListItem>
+
+					<Collapse
+						in={this.state.collaborateOpen}
+						timeout="auto"
+						unmountOnExit
+					>
+						<List disablePadding>
+							<ListItem className={classes.nestedList} button>
+								<ListItemIcon>
+									<PeopleIcon />
+								</ListItemIcon>
+								<ListItemText>Collaborators</ListItemText>
+							</ListItem>
+
+							<ListItem
+								className={classes.nestedList}
+								button
+								onClick={() => dispatch(toggleCollaborateMenu())}
+							>
+								<ListItemIcon>
+									<PersonAddIcon />
+								</ListItemIcon>
+								<ListItemText>Add Collaborator</ListItemText>
+							</ListItem>
+						</List>
+					</Collapse>
+
+					<Divider />
 				</List>
-				<Divider />
-				<ListItem button onClick={this.handleAddToggle}>
-					<ListItemText>Import/Copy</ListItemText>
-					{this.state.addOpen ? <ExpandLess /> : <ExpandMore />}
-				</ListItem>
-				<Collapse in={this.state.addOpen} timeout="auto" unmountOnExit>
-					<List>
-						<ListItem
-							button
-							className={classes.nestedList}
-							onClick={this.toggleImport("students")}
-						>
-							<ListItemText>Students</ListItemText>
-						</ListItem>
-					</List>
-				</Collapse>
-				<Divider />
 			</Fragment>
 		);
 	}

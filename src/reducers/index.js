@@ -13,6 +13,7 @@ import navbar from "./navbar";
 import pollResponse from "./pollResponse";
 import responses from "./responses";
 import loading from "./loading";
+import courseCollaborations from "./courseCollaborations";
 import { homeworkCheck } from "./HomeworkCheck";
 import { pageStates } from "./PageStates";
 
@@ -32,5 +33,6 @@ export default combineReducers({
 	responses,
 	loading,
 	...homeworkCheck,
-	...pageStates
+	...pageStates,
+	courseCollaborations,
 });
