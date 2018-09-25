@@ -37,9 +37,13 @@ class HWCourseHWAddDialog extends Component {
 
 	componentDidUpdate(prevState) {
 		if (prevState.unitID !== this.props.unitID) {
-			this.setState({
-				unitID: this.props.unitID,
-			});
+			this.setState(state => ({
+				...state,
+				homework: {
+					...state.homework,
+					unitID: this.props.unitID,
+				},
+			}));
 		}
 	}
 
@@ -54,7 +58,6 @@ class HWCourseHWAddDialog extends Component {
 
 	handleSubmit = e => {
 		e.preventDefault();
-		console.log(this.state.homework);
 		if (!this.state.plus) {
 			this.close();
 		}
