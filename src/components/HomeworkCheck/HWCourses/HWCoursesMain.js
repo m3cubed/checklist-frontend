@@ -13,12 +13,12 @@ import HWCourseEditDialog from "./CourseEdits/HWCourseEditDialog";
 
 const styles = theme => ({
 	root: {
-		flexGrow: 1
+		flexGrow: 1,
 	},
 
 	addContainer: {
-		width: "100%"
-	}
+		width: "100%",
+	},
 });
 
 class HWCoursesMain extends Component {
@@ -29,7 +29,7 @@ class HWCoursesMain extends Component {
 			anchorEl: null,
 			target: null,
 			openEdit: false,
-			openDelete: false
+			openDelete: false,
 		};
 
 		this.handleDialogs = this.handleDialogs.bind(this);
@@ -39,7 +39,7 @@ class HWCoursesMain extends Component {
 		this.setState({
 			openOptions: true,
 			anchorEl: event.currentTarget,
-			target: course
+			target: course,
 		});
 	};
 
@@ -47,7 +47,7 @@ class HWCoursesMain extends Component {
 		this.setState({
 			openOptions: false,
 			anchorEl: null,
-			target: null
+			target: null,
 		});
 	};
 
@@ -55,9 +55,9 @@ class HWCoursesMain extends Component {
 		this.setState(
 			{
 				openOptions: false,
-				anchorEl: null
+				anchorEl: null,
 			},
-			() => this.setState({ [type]: !this.state[type] })
+			() => this.setState({ [type]: !this.state[type] }),
 		);
 	};
 
@@ -130,11 +130,11 @@ class HWCoursesMain extends Component {
 	}
 }
 
-function mapStateToProps({ hwCourses }) {
+function mapStateToProps({ hwCourses, courseCollaborations }) {
 	return { hwCourses };
 }
 
 export default compose(
 	withStyles(styles),
-	connect(mapStateToProps)
+	connect(mapStateToProps),
 )(HWCoursesMain);
