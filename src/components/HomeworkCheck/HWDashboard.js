@@ -17,15 +17,15 @@ const styles = theme => ({
 		zIndex: 1,
 		overflow: "hidden",
 		position: "relative",
-		display: "flex"
+		display: "flex",
 	},
 	content: {
 		flexGrow: 1,
 		marginTop: "10px",
 		backgroundColor: theme.palette.background.default,
 		padding: theme.spacing.unit * 3,
-		minWidth: 0
-	}
+		minWidth: 0,
+	},
 });
 
 const HWDisplay = props => {
@@ -34,7 +34,7 @@ const HWDisplay = props => {
 
 class HWDashboard extends Component {
 	state = {
-		addDialogOpen: false
+		addDialogOpen: false,
 	};
 
 	componentWillUnmount() {
@@ -43,7 +43,7 @@ class HWDashboard extends Component {
 
 	toggleAddDialog = state => {
 		this.setState(state => ({
-			addDialogOpen: !state.addDialogOpen
+			addDialogOpen: !state.addDialogOpen,
 		}));
 	};
 
@@ -90,7 +90,7 @@ function mapStateToProps({ hwCourses }) {
 
 function mapDispatchToProps(dispatch) {
 	dispatch(
-		changeNavbarTitle({ value: "Homework Check", location: "HWCheck Main" })
+		changeNavbarTitle({ value: "Homework Check", location: "HWCheck Main" }),
 	);
 	dispatch(loadDefaultHWCourses());
 	return { dispatch };
@@ -99,6 +99,6 @@ export default compose(
 	withStyles(styles),
 	connect(
 		mapStateToProps,
-		mapDispatchToProps
-	)
+		mapDispatchToProps,
+	),
 )(HWDashboard);

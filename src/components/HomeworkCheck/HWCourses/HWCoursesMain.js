@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 //Accessories
 import Grid from "@material-ui/core/Grid";
 import ContainerDimensions from "react-container-dimensions";
+import Typography from "@material-ui/core/Typography";
 //Components
 import HWCoursesContainer from "./HWCoursesContainer";
 import HWCourseEditMenu from "./CourseEdits/HWCourseEditMenu";
@@ -62,7 +63,7 @@ class HWCoursesMain extends Component {
 	};
 
 	render() {
-		const { classes, hwCourses } = this.props;
+		const { classes, hwCourses, courseCollaborations } = this.props;
 
 		return (
 			<Fragment>
@@ -88,7 +89,40 @@ class HWCoursesMain extends Component {
 
 				<Grid container justify="center" alignItems="center" spacing={0}>
 					<Grid item xs={12} md={10}>
+						{courseCollaborations === null ? null : (
+							<Grid container spacing={40}>
+								<Grid item xs={12}>
+									<Typography variant="display1" style={{ color: "white" }}>
+										Collaborations
+									</Typography>
+								</Grid>
+								{Object.keys(courseCollaborations).map(item => (
+									<Grid
+										key={item}
+										item
+										className={classes.addContainer}
+										align="center"
+										xs={10}
+										sm={4}
+									>
+										<ContainerDimensions>
+											<HWCoursesContainer
+												id={item}
+												course={courseCollaborations[item]}
+												open={this.state.openOptions}
+												toggle={this.handleOptionsOpen}
+											/>
+										</ContainerDimensions>
+									</Grid>
+								))}
+							</Grid>
+						)}
 						<Grid container spacing={40}>
+							<Grid item xs={12}>
+								<Typography variant="display1" style={{ color: "white" }}>
+									Collection
+								</Typography>
+							</Grid>
 							{hwCourses === null
 								? null
 								: Object.keys(hwCourses).map(item => (
@@ -131,7 +165,7 @@ class HWCoursesMain extends Component {
 }
 
 function mapStateToProps({ hwCourses, courseCollaborations }) {
-	return { hwCourses };
+	return { hwCourses, courseCollaborations };
 }
 
 export default compose(

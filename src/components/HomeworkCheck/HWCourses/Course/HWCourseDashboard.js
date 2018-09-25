@@ -85,7 +85,7 @@ class RenderDashBoard extends Component {
 		const { dispatch } = this.props;
 		dispatch(
 			changeNavbarTitle({
-				value: [this.props.hwCourses[id].courseTitle],
+				value: [this.props.courses[id].courseTitle],
 				location: "HWCheck Course",
 			}),
 		);
@@ -182,11 +182,20 @@ class RenderDashBoard extends Component {
 	}
 }
 
-function mapStateToProps({ hwUnits, hwStudents, hwCourses }) {
+function mapStateToProps({
+	hwUnits,
+	hwStudents,
+	hwCourses,
+	courseCollaborations,
+}) {
 	return {
 		hwUnits,
 		hwStudents,
 		hwCourses,
+		courses:
+			courseCollaborations === null
+				? hwCourses
+				: Object.assign(courseCollaborations, hwCourses),
 	};
 }
 
