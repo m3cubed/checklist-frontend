@@ -12,8 +12,8 @@ import { toggleSeatingHomework } from "../../../../../actions/PageStates/page_hw
 
 const styles = theme => ({
 	root: {
-		flexGrow: 1,
-	},
+		flexGrow: 1
+	}
 });
 
 class SeatingViewHWList extends Component {
@@ -43,7 +43,7 @@ class SeatingViewHWList extends Component {
 						))
 					) : (
 						<MenuItem>
-							<ListItemText primary="You Haven't Added a Homework!" />
+							<ListItemText primary="No Homework!" />
 						</MenuItem>
 					)}
 				</MenuList>
@@ -61,10 +61,10 @@ function mapStateToProps({ homeworks, page_hwCheckCourse }) {
 			}
 			return acc;
 		}, {}),
-		selected: page_hwCheckCourse.seatingHomework,
+		selected: page_hwCheckCourse.seatingHomework
 	};
 }
 export default compose(
 	withStyles(styles),
-	connect(mapStateToProps),
+	connect(mapStateToProps)
 )(SeatingViewHWList);

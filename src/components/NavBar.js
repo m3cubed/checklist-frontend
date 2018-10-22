@@ -19,6 +19,8 @@ import { loadDefaults } from "../api";
 import BaseSideDrawer from "./BaseSideDrawer";
 //Components
 
+const drawerWidth = 240;
+
 const styles = theme => ({
 	root: {
 		flexGrow: 1
@@ -30,14 +32,32 @@ const styles = theme => ({
 		marginLeft: -12,
 		marginRight: 20
 	},
-	navIconHide: {
-		[theme.breakpoints.up("lg")]: {
-			display: "none"
-		}
-	},
+	// navIconHide: {
+	// 	[theme.breakpoints.up("lg")]: {
+	// 		display: "none"
+	// 	}
+	// },
 	appBar: {
-		position: "absolute",
-		marginLeft: 256
+		zIndex: theme.zIndex.drawer + 1,
+		transition: theme.transitions.create(["width", "margin"], {
+			easing: theme.transitions.easing.sharp,
+			duration: theme.transitions.duration.leavingScreen
+		})
+	},
+	appBarShift: {
+		marginLeft: drawerWidth,
+		width: `calc(100% - ${drawerWidth}px)`,
+		transition: theme.transitions.create(["width", "margin"], {
+			easing: theme.transitions.easing.sharp,
+			duration: theme.transitions.duration.enteringScreen
+		})
+	},
+	menuButton: {
+		marginLeft: 12,
+		marginRight: 36
+	},
+	menuButtonHidden: {
+		display: "none"
 	}
 });
 
@@ -113,7 +133,11 @@ class NavBar extends Component {
 
 		return (
 			<Fragment>
-				<AppBar className={classes.appBar}>
+				<AppBar
+					className={
+						this.state.drawerOpen ? classes.appBar : classes.appBarShift
+					}
+				>
 					<ToolBar>
 						<IconButton
 							color="inherit"
@@ -121,7 +145,11 @@ class NavBar extends Component {
 							onClick={() => {
 								this.toggleDrawer();
 							}}
-							className={classes.navIconHide}
+							className={
+								this.state.drawerOpen
+									? classes.menuButton
+									: classes.menuButtonHidden
+							}
 						>
 							<MenuIcon />
 						</IconButton>

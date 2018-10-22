@@ -9,19 +9,19 @@ import Paper from "@material-ui/core/Paper";
 //Redux
 import {
 	loadDefaultHWStudents,
-	loadHWStudents,
+	loadHWStudents
 } from "../../../../actions/HomeworkCheck/hwStudents";
 import {
 	loadDefaultHWUnits,
-	loadHWUnits,
+	loadHWUnits
 } from "../../../../actions/HomeworkCheck/hwUnits";
 import {
 	loadDefaultHomeworks,
-	loadHomeworks,
+	loadHomeworks
 } from "../../../../actions/HomeworkCheck/homeworks";
 import {
 	loadDefaultHWStatus,
-	loadHWStatus,
+	loadHWStatus
 } from "../../../../actions/HomeworkCheck/hwStatus";
 import { loadingAPI } from "../../../../api";
 //Components
@@ -41,17 +41,16 @@ import HWImportMain from "./Importing/HWImportMain";
 import { loadDefaultSeatingPositions } from "../../../../actions/HomeworkCheck/seatingPositions";
 import {
 	loadDefaultCollaborators,
-	loadCollaborators,
+	loadCollaborators
 } from "../../../../actions/HomeworkCheck/collaborate";
 
 const styles = theme => ({
 	root: {
-		flexGrow: 1,
-		height: 850,
+		flexGrow: 1
 	},
 	unitBar: {
-		position: "static",
-	},
+		position: "static"
+	}
 });
 
 const HWCourseDashboard = props => {
@@ -65,12 +64,12 @@ const HWCourseDashboard = props => {
 				{ action: loadDefaultHWStatus, condition: id },
 				{ action: loadDefaultHomeworks, condition: id },
 				{ action: loadDefaultHWCourses },
-				{ action: loadDefaultCollaborators, condition: id },
+				{ action: loadDefaultCollaborators, condition: id }
 			],
 			[
 				{ action: loadDefaultStudentStatus, condition: id },
-				{ action: loadDefaultSeatingPositions, condition: id },
-			],
+				{ action: loadDefaultSeatingPositions, condition: id }
+			]
 		]);
 
 		return null;
@@ -86,8 +85,8 @@ class RenderDashBoard extends Component {
 		dispatch(
 			changeNavbarTitle({
 				value: [this.props.courses[id].courseTitle],
-				location: "HWCheck Course",
-			}),
+				location: "HWCheck Course"
+			})
 		);
 		dispatch(changeViewState("Table View"));
 	}
@@ -105,7 +104,7 @@ class RenderDashBoard extends Component {
 		hwDialog: false,
 		unitDialog: false,
 		statusDialog: false,
-		unitID: Object.keys(this.props.hwUnits)[0],
+		unitID: Object.keys(this.props.hwUnits)[0]
 	};
 
 	toggleUnitID = unitID => {
@@ -115,14 +114,14 @@ class RenderDashBoard extends Component {
 	toggleDialogOpen = type => () => {
 		const target = `${type}Dialog`;
 		this.setState({
-			[target]: true,
+			[target]: true
 		});
 	};
 
 	toggleDialogClose = type => () => {
 		const target = type + "Dialog";
 		this.setState({
-			[target]: false,
+			[target]: false
 		});
 	};
 
@@ -163,11 +162,11 @@ class RenderDashBoard extends Component {
 
 				<HWImportMain courseID={id} />
 
-				<Grid container spacing={8}>
+				<Grid container spacing={0}>
 					<Grid item xs={1}>
 						<HWStatusBar add={this.toggleDialogOpen("status")} />
 					</Grid>
-					<Grid container item xs={11} style={{ height: 700 }} spacing={0}>
+					<Grid item xs={11}>
 						<HWCourseUnitTabs
 							toggleHWDialogOpen={this.toggleDialogOpen("hw")}
 							toggleUnitDialogOpen={this.toggleDialogOpen("unit")}
@@ -186,7 +185,7 @@ function mapStateToProps({
 	hwUnits,
 	hwStudents,
 	hwCourses,
-	courseCollaborations,
+	courseCollaborations
 }) {
 	return {
 		hwUnits,
@@ -195,11 +194,11 @@ function mapStateToProps({
 		courses:
 			courseCollaborations === null
 				? hwCourses
-				: Object.assign(courseCollaborations, hwCourses),
+				: Object.assign(courseCollaborations, hwCourses)
 	};
 }
 
 export default compose(
 	withStyles(styles),
-	connect(mapStateToProps),
+	connect(mapStateToProps)
 )(HWCourseDashboard);

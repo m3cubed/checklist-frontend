@@ -20,18 +20,18 @@ const theme = createMuiTheme({
 			main: "#7cb342",
 			light: "#aee571",
 			dark: "#4b830d",
-			contrastText: "#000",
+			contrastText: "#000"
 		},
 		secondary: {
 			main: "#b71c1c",
 			light: "#fo05545",
 			dark: "#7f0000",
-			contrastText: "#fff",
+			contrastText: "#fff"
 		},
 		background: {
-			default: "#394352",
-		},
-	},
+			default: "#E0E0E0"
+		}
+	}
 });
 
 // const persistedState = loadState();
@@ -54,7 +54,7 @@ auth.checkAuthentication(store.dispatch).then(() => {
 				<App auth={auth} />
 			</MuiThemeProvider>
 		</Provider>,
-		document.getElementById("root"),
+		document.getElementById("root")
 	);
 });
 unregister();

@@ -23,19 +23,19 @@ import SeatingViewDashboard from "./SeatingView/SeatingViewDashboard";
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: 700,
+		height: `calc(100vh - 64px - ${theme.spacing.unit * 6}px )`
 	},
 	unitBar: {
-		position: "static",
+		position: "static"
 	},
 	gridContainer: {
-		height: 650,
+		height: `calc(100vh - 64px - ${theme.spacing.unit * 6}px - 48px)`,
 		backgroundColor: theme.palette.primary,
-		display: "block",
+		display: "block"
 	},
 	tabBtn: {
-		button: {},
-	},
+		button: {}
+	}
 });
 
 const searchStudents = props => {
@@ -50,7 +50,7 @@ class HWCourseUnitTabs extends Component {
 	state = {
 		openUnitMenu: false,
 		unitAnchorEl: null,
-		targetUnit: null,
+		targetUnit: null
 	};
 
 	componentDidUpdate(prevProps) {
@@ -117,7 +117,7 @@ class HWCourseUnitTabs extends Component {
 		this.setState({
 			openUnitMenu: !this.state.openUnitMenu,
 			unitAnchorEl: this.state.unitAnchorEl === null ? e.currentTarget : null,
-			targetUnit: unit || null,
+			targetUnit: unit || null
 		});
 	};
 
@@ -125,7 +125,7 @@ class HWCourseUnitTabs extends Component {
 		this.setState({
 			openUnitMenu: false,
 			unitAnchorEl: null,
-			targetUnit: null,
+			targetUnit: null
 		});
 	};
 
@@ -144,13 +144,23 @@ class HWCourseUnitTabs extends Component {
 				) : null}
 				<Grid item xs={12}>
 					<AppBar className={classes.unitBar} color="default">
-						<Grid container alignItems="center">
-							<Grid item xs="auto">
+						<Grid container>
+							<Grid item xs={1} align="center">
+								<Button
+									color="primary"
+									onClick={this.props.toggleUnitDialogOpen}
+								>
+									<AddBoxIcon />
+								</Button>
+							</Grid>
+							<Grid item xs={11}>
 								<Tabs
 									value={this.props.currentUnit}
 									onChange={this.handleTabValue}
 									indicatorColor="primary"
 									textColor="primary"
+									scrollable
+									scrollButtons="auto"
 								>
 									{Object.keys(hwUnits).map(item => (
 										<Tab
@@ -163,25 +173,23 @@ class HWCourseUnitTabs extends Component {
 									))}
 								</Tabs>
 							</Grid>
-
-							<Grid item xs={1}>
-								<Button
-									color="primary"
-									onClick={this.props.toggleUnitDialogOpen}
-								>
-									<AddBoxIcon />
-								</Button>
-							</Grid>
 						</Grid>
 					</AppBar>
 				</Grid>
+
 				<Grid item xs={12}>
 					<div className={classes.gridContainer}>
 						{this.props.currentUnit !== "" ? (
-							<Grid container spacing={8} justify="center" alignItems="center">
-								<Grid item xs={12}>
+							<Grid
+								container
+								spacing={8}
+								justify="center"
+								alignItems="center"
+								style={{ height: `100%` }}
+							>
+								<Grid item style={{ height: "100%" }} xs={12}>
 									{this.props.studentHWStatus === null ? null : (
-										<Paper style={{ height: 600 }}>
+										<Paper style={{ height: "100%" }}>
 											{this.mountTable(this.props.currentUnit)}
 										</Paper>
 									)}
@@ -211,7 +219,7 @@ function mapStateToProps({
 	homeworks,
 	hwStudents,
 	studentHWStatus,
-	page_hwCheckCourse,
+	page_hwCheckCourse
 }) {
 	return {
 		hwUnits,
@@ -219,11 +227,11 @@ function mapStateToProps({
 		hwStudents,
 		studentHWStatus,
 		currentUnit: page_hwCheckCourse.unit,
-		view: page_hwCheckCourse.view,
+		view: page_hwCheckCourse.view
 	};
 }
 
 export default compose(
 	withStyles(styles),
-	connect(mapStateToProps),
+	connect(mapStateToProps)
 )(HWCourseUnitTabs);
