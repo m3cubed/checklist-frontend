@@ -143,37 +143,40 @@ class HWCourseUnitTabs extends Component {
 					/>
 				) : null}
 				<Grid item xs={11}>
-					<AppBar className={classes.unitBar} color="default">
-						<Grid container alignItems="center">
-							<Grid item xs="auto">
-								<Tabs
-									value={this.props.currentUnit}
-									onChange={this.handleTabValue}
-									indicatorColor="primary"
-									textColor="primary"
-								>
-									{Object.keys(hwUnits).map(item => (
-										<Tab
-											aria-owns={this.state.unitAnchorEl ? "unit_menu" : null}
-											label={hwUnits[item].unitTitle}
-											value={item}
-											key={item}
-											onContextMenu={this.toggleUnitMenu(item)}
-										/>
-									))}
-								</Tabs>
-							</Grid>
-
-							<Grid item xs={1}>
-								<Button
-									color="primary"
-									onClick={this.props.toggleUnitDialogOpen}
-								>
-									<AddBoxIcon />
-								</Button>
-							</Grid>
+			
+				<AppBar className={classes.unitBar} color="default">
+					<Grid container>
+						<Grid item xs={1} align="center">
+							<Button
+								color="primary"
+								onClick={this.props.toggleUnitDialogOpen}
+							>
+								<AddBoxIcon />
+							</Button>
 						</Grid>
-					</AppBar>
+						<Grid item xs={11}>
+							<Tabs
+								value={this.props.currentUnit}
+								onChange={this.handleTabValue}
+								indicatorColor="primary"
+								textColor="primary"
+								scrollable
+								scrollButtons="auto"
+							>
+								{Object.keys(hwUnits).map(item => (
+									<Tab
+										aria-owns={this.state.unitAnchorEl ? "unit_menu" : null}
+										label={hwUnits[item].unitTitle}
+										value={item}
+										key={item}
+										onContextMenu={this.toggleUnitMenu(item)}
+									/>
+								))}
+							</Tabs>
+						</Grid>
+					</Grid>
+				</AppBar>
+	
 				</Grid>
 				<Grid item xs={11}>
 					<div className={classes.gridContainer}>
